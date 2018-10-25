@@ -1,4 +1,5 @@
 #include "hwlib.hpp"
+#include "ir_send.hpp"
 
 
 int main( void ){	
@@ -10,30 +11,9 @@ int main( void ){
    
    bool values[16] = {1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0};
    
-   while (1){
-       encoder.set(1);
-       hwlib::cout << "start" << "\n";
-       for (int i = 0; i < 2; i++){
-           for(int i = 0; i < 16; i++){
-               if (values[i]){
-                   encoder.set(1);
-                   hwlib::wait_us(1600);
-                   encoder.set(0);
-                   hwlib::wait_us(800);
-               } else {
-                   encoder.set(1);
-                   hwlib::wait_us(800);
-                   encoder.set(0);
-                   hwlib::wait_us(1600);
-               }
-               
-               hwlib::cout << values[i] << "\n";
-           }
-           hwlib::cout << "end  " << i << "\n";
-           encoder.set(0);
-           hwlib::wait_ms(3000);
-       }
-       hwlib::wait_ms(4);
-   }
+   ir_send transmitter = ir_send(encoder, values);
+   
+   rtos::run;
+   
    return 0;
 }
