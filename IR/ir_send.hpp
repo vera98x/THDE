@@ -13,7 +13,7 @@ private:
         
        while (1){
 		   encoder.set(1);
-		   hwlib::cout << "start" << "\n";
+		  // hwlib::cout << "start" << "\n";
 		   for (int i = 0; i < 2; i++){
 			   for(int i = 0; i < 16; i++){
 				   if (values[i]){
@@ -28,9 +28,9 @@ private:
 					   hwlib::wait_us(1600);
 				   }
 				   
-				   hwlib::cout << values[i] << "\n";
+				  //hwlib::cout << values[i] << "\n";
 			   }
-			   hwlib::cout << "end  " << i << "\n";
+			  // hwlib::cout << "end  " << i << "\n";
 			   encoder.set(0);
 			   hwlib::wait_ms(3000);
 		   }
