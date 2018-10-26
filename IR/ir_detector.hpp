@@ -1,28 +1,31 @@
 #include "hwlib.hpp"
 #include "rtos.hpp"
+#include "ir_decoder.hpp"
 
-class ir_decoder: public rtos::task<>
+class ir_detector: public rtos::task<>
 {
 private:
-	hwlib::target::pin_in & decoder;
-	uint16_t firstSet = 0;
-	uint16_t secondSet = 0;
+	hwlib::target::pin_in & detector;
+	ir_decoder & decoder;
+	bool firstSet [16]={};
+	bool secondSet [16]={};
 	enum class STATE {WAITING, MESSAGING};
 	enum STATE state;
 	int counter = 0;
 	int timerValue = 100;
+	
 
-	void main( void )
+	void main( void ) override
 	{
 		for(;;)
 		{
 			switch(state)
 			{
 				case STATE::WAITING:
-					if(decoder.get() == 0)
+					if(detector.get() == 0)
 					{
 						counter++;
-						firstSet = 1;
+						firstSet[0] = 1;
 						timerValue = 1000;
 						state = STATE::MESSAGING;
 					}
@@ -31,13 +34,11 @@ private:
 				case STATE::MESSAGING:
 					if(counter / 16 == 0)
 					{
-						firstSet = firstSet << 1;
-                        firstSet |= !decoder.get();
+						firstSet[counter] = !detector.get();
 					}
 					else
 					{
-						secondSet = secondSet << 1;
-                        secondSet |= !decoder.get();
+						secondSet[counter-16] = !detector.get();
 					}
 					if (counter == 15)
 					{
@@ -47,11 +48,17 @@ private:
 					
 					if(counter >= 31)
 					{
-                        hwlib::cout<<firstSet<< " /n";
+						decoder.setChannel(firstSet, secondSet);
+						for(int i = 0; i < 16; i++)
+						{
+							hwlib::cout<<firstSet[i]<< " /n";
+						}
 						hwlib::cout << " ================================";
-                        hwlib::cout<<secondSet<< " /n";
-						
-                        counter = 0;
+						for(int i = 0; i < 16; i++)
+						{
+							hwlib::cout<<secondSet[i]<< " /n";
+						}
+						counter = 0;
 						timerValue = 100;
 						state = STATE::WAITING;
 					}
@@ -63,9 +70,10 @@ private:
 
 
 public:
-ir_decoder(hwlib::target::pin_in & decoder):
-	task(1, "decoder_task"),
-	decoder(decoder),
+ir_detector(ir_decoder & decoder, hwlib::target::pin_in & detector):
+	task(1, "detector_task"),
+	decoder ( decoder ),
+	detector(detector),
 	state(STATE::WAITING)
 	{}
 	
