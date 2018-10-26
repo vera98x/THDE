@@ -3,106 +3,75 @@
 
 class ir_decoder: public rtos::task<>
 {
-	
 private:
 	hwlib::target::pin_in & decoder;
-	int firstSet [16]={};
-	int secondSet [16]={};
+	bool firstSet [16]={};
+	bool secondSet [16]={};
+	enum class STATE {WAITING, MESSAGING};
+	enum STATE state;
+	int counter = 0;
+	int timerValue = 100;
 
-public:
-ir_decoder(hwlib::target::pin_in & decoder, int firstSet, int secondSet):
-	decoder(decoder),
-	firstSet(firstSet),
-	secondSet(secondSet)
-	{}
-	
 	void main( void )
 	{
-			while(1)
-	{
-		for(unsigned int j=0; j<=1; j++)
+		for(;;)
 		{
-			//hwlib::wait_ms(3);
-			int firstpin = !decoder.get();
-			if(firstpin == 1)
+			switch(state)
 			{
-				firstSet [0] = !decoder.get();
-				secondSet [0] = !decoder.get();
-				while(!decoder.get() == 1){
-					
-				}
-				while(!decoder.get() == 0){
-					
-				}
-				for(unsigned int i=1; i <= 15; i++)
-				{
-					while(!decoder.get() == 0){
-					
+				case STATE::WAITING:
+					if(decoder.get() == 0)
+					{
+						counter++;
+						firstSet[0] = 1;
+						timerValue = 1000;
+						state = STATE::MESSAGING;
 					}
-					hwlib::wait_us(1000);
-					if (j == 0){
-						firstSet [i] = !decoder.get();
+					break;
+				
+				case STATE::MESSAGING:
+					if(counter / 16 == 0)
+					{
+						firstSet[counter] = !decoder.get();
 					}
 					else
 					{
-						secondSet [i] =!decoder.get();
+						secondSet[counter-16] = !decoder.get();
 					}
-					hwlib::wait_us(1000);
-				}
-				
+					if (counter == 15)
+					{
+						hwlib::wait_us(2980);
+					}
+					counter++;
+					
+					if(counter >= 31)
+					{
+						for(int i = 0; i < 16; i++)
+						{
+							hwlib::cout<<firstSet[i]<< " /n";
+						}
+						hwlib::cout << " ================================";
+						for(int i = 0; i < 16; i++)
+						{
+							hwlib::cout<<secondSet[i]<< " /n";
+						}
+						counter = 0;
+						timerValue = 100;
+						state = STATE::WAITING;
+					}
+					break;
 			}
-			
-			if (firstpin && j ==1)
-			{
-				if(firstSet[11] != (firstSet[1] ^firstSet[6]))
-				{
-					hwlib::cout << " one or six are false! \n" ;
-				}
-				else
-				{
-					hwlib::cout << " one and six are true! \n";
-				}
-				if(firstSet[12] != (firstSet[2] ^firstSet[7]))
-				{
-					hwlib::cout << "two and seven are false! \n";
-				}
-				else
-				{
-					hwlib::cout << " two and seven are true! \n";
-				}
-				if(firstSet[13] != (firstSet[3] ^firstSet[8]))
-				{
-					hwlib::cout << " three or eight are false! \n" ;
-				}
-				else
-				{
-					hwlib::cout << " three and eight are true! \n";
-				}
-				if(firstSet[14] != (firstSet[4] ^firstSet[9]))
-				{
-					hwlib::cout << " four or nine are false! \n" ;
-				}
-				else
-				{
-					hwlib::cout << " four and nine are true! \n";
-				}
-				
-				
-				
-				for(unsigned int i=0; i <=15; i++)
-				{
-					hwlib::cout<< "bit:	" << i <<" 	=	"<< firstSet[i] << '\n';
-				}
-				hwlib::cout<< "----------EERSTE-----------" << '\n';
-				for(unsigned int i=0; i<=15; i++)
-				{
-					hwlib::cout<< "bit:	" << i <<" 	=	"<< secondSet[i] << '\n';
-				}
-				hwlib::cout<< "----------TWEEDE-----------" << '\n';
-			}
-			}
+			hwlib::wait_us(timerValue);
 		}
 	}
+
+
+public:
+ir_decoder(hwlib::target::pin_in & decoder):
+	task(1, "decoder_task"),
+	decoder(decoder),
+	state(STATE::WAITING)
+	{}
+	
 
 
 };
