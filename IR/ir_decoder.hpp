@@ -5,8 +5,8 @@ class ir_decoder: public rtos::task<>
 {
 private:
 	hwlib::target::pin_in & decoder;
-	bool firstSet [16]={};
-	bool secondSet [16]={};
+	uint16_t firstSet = 0;
+	uint16_t secondSet = 0;
 	enum class STATE {WAITING, MESSAGING};
 	enum STATE state;
 	int counter = 0;
@@ -22,7 +22,7 @@ private:
 					if(decoder.get() == 0)
 					{
 						counter++;
-						firstSet[0] = 1;
+						firstSet = 1;
 						timerValue = 1000;
 						state = STATE::MESSAGING;
 					}
@@ -31,11 +31,13 @@ private:
 				case STATE::MESSAGING:
 					if(counter / 16 == 0)
 					{
-						firstSet[counter] = !decoder.get();
+						firstSet = firstSet << 1;
+                        firstSet |= !decoder.get();
 					}
 					else
 					{
-						secondSet[counter-16] = !decoder.get();
+						secondSet = secondSet << 1;
+                        secondSet |= !decoder.get();
 					}
 					if (counter == 15)
 					{
@@ -45,16 +47,11 @@ private:
 					
 					if(counter >= 31)
 					{
-						for(int i = 0; i < 16; i++)
-						{
-							hwlib::cout<<firstSet[i]<< " /n";
-						}
+                        hwlib::cout<<firstSet<< " /n";
 						hwlib::cout << " ================================";
-						for(int i = 0; i < 16; i++)
-						{
-							hwlib::cout<<secondSet[i]<< " /n";
-						}
-						counter = 0;
+                        hwlib::cout<<secondSet<< " /n";
+						
+                        counter = 0;
 						timerValue = 100;
 						state = STATE::WAITING;
 					}
