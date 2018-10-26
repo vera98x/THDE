@@ -12,7 +12,7 @@
 SOURCES := 
 
 # header files in this project
-HEADERS := ir_decoder.hpp
+HEADERS := ir_decoder.hpp ir_detector.hpp ir_send.hpp
 
 # other places to look for files for this project
 SEARCH  := 

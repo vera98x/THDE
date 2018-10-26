@@ -1,77 +1,37 @@
 #include "hwlib.hpp"
 #include "rtos.hpp"
+#include <bitset>
+
 
 class ir_decoder: public rtos::task<>
 {
 private:
-	hwlib::target::pin_in & decoder;
-	bool firstSet [16]={};
-	bool secondSet [16]={};
-	enum class STATE {WAITING, MESSAGING};
-	enum STATE state;
-	int counter = 0;
-	int timerValue = 100;
-
-	void main( void )
+	rtos::channel<uint16_t, 1024> irReceiveQueue;
+	
+	void main( void ) override
 	{
 		for(;;)
 		{
-			switch(state)
+			uint16_t firstPattern = irReceiveQueue.read();
+			for(unsigned int i=0; i<5 i++)
 			{
-				case STATE::WAITING:
-					if(decoder.get() == 0)
-					{
-						counter++;
-						firstSet[0] = 1;
-						timerValue = 1000;
-						state = STATE::MESSAGING;
-					}
-					break;
-				
-				case STATE::MESSAGING:
-					if(counter / 16 == 0)
-					{
-						firstSet[counter] = !decoder.get();
-					}
-					else
-					{
-						secondSet[counter-16] = !decoder.get();
-					}
-					if (counter == 15)
-					{
-						hwlib::wait_us(2980);
-					}
-					counter++;
-					
-					if(counter >= 31)
-					{
-						for(int i = 0; i < 16; i++)
-						{
-							hwlib::cout<<firstSet[i]<< " /n";
-						}
-						hwlib::cout << " ================================";
-						for(int i = 0; i < 16; i++)
-						{
-							hwlib::cout<<secondSet[i]<< " /n";
-						}
-						counter = 0;
-						timerValue = 100;
-						state = STATE::WAITING;
-					}
-					break;
+				if( (((firstPattern << 15-6+i) & 1)^( (firstPattern << 15-1+i) & 1)) != ((firstPattern << 15-11+i) & 1) )
+				{
+					hwlib::cout<< 1+i << " and " << 6+i << " are not XOR" << '\n';
+				}
 			}
-			hwlib::wait_us(timerValue);
 		}
 	}
-
-
+	
 public:
-ir_decoder(hwlib::target::pin_in & decoder):
-	task(1, "decoder_task"),
-	decoder(decoder),
-	state(STATE::WAITING)
+	ir_detector():
+	task(4, "ir_decoderTask")
 	{}
 	
-
+	void setChannel(const uint16_t & firstSet, const uint16_t  & secondSet)
+	{
+		irPattern.write(firstSet);
+		irPattern.write(secondSet);
+	}
 
 };
