@@ -1,3 +1,6 @@
+#ifndef _IR_SEND_HPP
+#define _IR_SEND_HPP
+
 
 #include "hwlib.hpp"
 #include "rtos.hpp"
@@ -44,3 +47,5 @@ public:
 	encoder  ( encoder )
     {}
 };
+
+#endif
