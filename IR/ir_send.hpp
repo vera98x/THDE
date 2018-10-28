@@ -12,8 +12,7 @@ private:
     void main() override{
         
        while (1){
-		   encoder.set(1);
-		  // hwlib::cout << "start" << "\n";
+		   //hwlib::cout << "start" << "\n";
 		   for (int i = 0; i < 2; i++){
 			   for(int i = 0; i < 16; i++){
 				   if (values[i]){

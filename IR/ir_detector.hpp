@@ -8,11 +8,12 @@ private:
 	hwlib::target::pin_in & receivePin;
 	ir_decoder & decoder;
 	uint16_t firstSet = 0;
-	uint16_t secondSet = 0;
+	//uint16_t secondSet = 0;
 	enum class STATE {WAITING, MESSAGING};
 	enum STATE state;
 	int counter = 0;
 	int timerValue = 100;
+    int step = 0;
 	
 
 	void main( void ) override
@@ -22,43 +23,37 @@ private:
 			switch(state)
 			{
 				case STATE::WAITING:
-					if(receivePin.get() == 0)
-					{
-						counter++;
-						firstSet= 1;
-						timerValue = 1000;
-						state = STATE::MESSAGING;
-					}
+                    if(receivePin.get() == 0){
+                        while(receivePin.get() == 0){
+                            hwlib::wait_us(100);
+                        }
+                        while(receivePin.get() == 1){
+                            hwlib::wait_us(100);
+                        }
+                            counter++;
+                            firstSet= 1;
+                            step = 0;
+                            timerValue = 1200;
+                            state = STATE::MESSAGING;
+                    }
+                    
+
 					break;
 				
 				case STATE::MESSAGING:
-					if(counter / 16 == 0)
-					{
-						firstSet = firstSet << 1;
-						firstSet |= !receivePin.get();
-					}
-					else
-					{
-						secondSet = secondSet << 1;
-						secondSet |= !receivePin.get();
-					}
-					if (counter == 15)
-					{
-						hwlib::wait_us(2980);
-					}
+                    firstSet = firstSet << 1;
+                    firstSet |= !receivePin.get();
 					counter++;
 					
-					if(counter >= 31)
+					if(counter >= 16)
 					{
-						decoder.setChannel(firstSet, secondSet);
-						hwlib::cout<< firstSet << '\n';
-						hwlib::cout<< "====" << '\n';
-						hwlib::cout<< secondSet << '\n';
-						
+						hwlib::cout << "new bit \n";
+                        decoder.setChannel(firstSet);
 						counter = 0;
 						timerValue = 100;
 						state = STATE::WAITING;
 					}
+                    hwlib::wait_us(timerValue);
 					break;
 			}
 			hwlib::wait_us(timerValue);
