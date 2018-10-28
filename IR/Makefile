@@ -12,10 +12,10 @@
 SOURCES := 
 
 # header files in this project
-HEADERS := ir_decoder.hpp ir_detector.hpp ir_send.hpp
+HEADERS := ir_decoder.hpp ir_detector.hpp ir_send.hpp buzzer.hpp runGameController.hpp
 
 # other places to look for files for this project
-SEARCH  := 
+SEARCH  := ../w1-library
 
 # set RELATIVE to the next higher directory 
 # and defer to the Makefile.* there

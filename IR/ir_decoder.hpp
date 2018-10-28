@@ -1,5 +1,10 @@
+#ifndef _IR_DECODER_HPP
+#define _IR_DECODER_HPP
+
+
 #include "hwlib.hpp"
 #include "rtos.hpp"
+#include "runGameController.hpp"
 
 
 class ir_decoder: public rtos::task<>
@@ -15,7 +20,22 @@ private:
     enum class STATE {IDLE, DECODING};
 	enum STATE state;
 	uint16_t firstPattern;
-	
+	runGameController & rGC;
+    int delay;
+    
+    
+    bool verifyXOR(uint16_t d){
+        for(unsigned int i=0; i<5; i++)
+        {
+            if( (((firstPattern << (15-(6+i))) & 1)^( (firstPattern << (15-(1+i))) & 1)) != ((firstPattern << (15-(11+i))) & 1) )
+            {
+                //hwlib::cout<< 1+i << " and " << 6+i << " are not XOR" << '\n';
+                return false;
+            }
+        }
+        return true;
+    }
+    
 	
 	void main( void ) override
 	{
@@ -33,26 +53,30 @@ private:
                     hwlib::cout<< "bits: " << firstPattern << '\n';
                     hwlib::cout << hwlib::_setbase(10);
                     
-                    for(unsigned int i=0; i<5; i++)
-                    {
-                        if( (((firstPattern << (15-(6+i))) & 1)^( (firstPattern << (15-(1+i))) & 1)) != ((firstPattern << (15-(11+i))) & 1) )
-                        {
-                            //hwlib::cout<< 1+i << " and " << 6+i << " are not XOR" << '\n';
-                        }
+                    if (verifyXOR(firstPattern)){
+                        int playerNR = firstPattern >> 10;
+                        int gunNR = (firstPattern >> 5) & 31; //11111
+                        
+                        rGC.sendPlayerInfo(playerNR, gunNR);
+                        
                     }
-                    //hwlib::cout << " xor done, its okay \n";
+                    
                     state = STATE::IDLE;
                     break;
             }
+            
+            hwlib::wait_ms(delay);
 			
 		}
 	}
 	
 public:
-	ir_decoder():
+	ir_decoder(runGameController & rGC, int delay):
 	task(4, "ir_decoder"),
 	irReceiveQueue(this, "irChannel"),
-    state(STATE::DECODING)
+    state(STATE::DECODING),
+    rGC (rGC),
+    delay (delay)
 	{}
 	
 	void setChannel(const uint16_t & firstSet)
@@ -62,3 +86,5 @@ public:
 	}
 
 };
+
+#endif

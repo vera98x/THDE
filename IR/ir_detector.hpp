@@ -1,3 +1,7 @@
+#ifndef _IR_DETECTOR_HPP
+#define _IR_DETECTOR_HPP
+
+
 #include "hwlib.hpp"
 #include "rtos.hpp"
 #include "ir_decoder.hpp"
@@ -13,7 +17,7 @@ private:
 	enum STATE state;
 	int counter = 0;
 	int timerValue = 100;
-    int step = 0;
+    
 	
 
 	void main( void ) override
@@ -32,7 +36,6 @@ private:
                         }
                             counter++;
                             firstSet= 1;
-                            step = 0;
                             timerValue = 1200;
                             state = STATE::MESSAGING;
                     }
@@ -72,3 +75,5 @@ ir_detector(ir_decoder & decoder, hwlib::target::pin_in & receivePin):
 
 
 };
+
+#endif
