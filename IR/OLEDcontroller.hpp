@@ -27,4 +27,3 @@ OLEDcontroller(hwlib::glcd_oled_buffered & display):
 	{
 		
 	}
-}
