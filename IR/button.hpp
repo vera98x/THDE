@@ -3,6 +3,7 @@
 
 #include "hwlib.hpp"
 #include "rtos.hpp"
+#include "ir_send.hpp"
 
 class button : public rtos::task<>
 {
@@ -11,6 +12,7 @@ private:
 	int previousShot = 0;
 	
 	rtos::flag gunShotFlag;
+    ir_send & transmitter;
 	
 	void main ( void )
 	{
@@ -20,7 +22,7 @@ private:
 			{
 				previousShot = 1;
 				hwlib::cout<< "B" << previousShot << '\n';
-				//shootGun();
+				transmitter.shootGun();
 			}
 			if(gunTrigger.get()==1 && previousShot == 1)
 			{
@@ -31,10 +33,11 @@ private:
 	}
 	
 public:
-	button(hwlib::target::pin_in & gunTrigger):
+	button(hwlib::target::pin_in & gunTrigger, ir_send & transmitter):
 		task(3, "buttonTask"),
 		gunTrigger(gunTrigger),
-		gunShotFlag(this, "gunShotFlag")
+		gunShotFlag(this, "gunShotFlag"),
+        transmitter (transmitter)
 		{}
 
 };

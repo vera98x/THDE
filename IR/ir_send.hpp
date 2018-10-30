@@ -80,7 +80,7 @@ public:
         }
     }
     
-    void sendIR(){
+    void shootGun(){
         sendIRFlag.set();
     }
     

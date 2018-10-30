@@ -39,7 +39,7 @@ int main( void )
    ir_decoder decoder = ir_decoder(rGC, 300);
    ir_detector detector(decoder, listener);
    
-   button b(gunTrigger);
+   button b(gunTrigger, transmitter);
    
    rtos::run();
    
