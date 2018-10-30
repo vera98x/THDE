@@ -24,15 +24,15 @@ private:
     
     void main() override {
         while(1){
-            bz.GameOverSound();
-            hwlib::wait_ms(6000);
+            //bz.GameOverSound();
+            //hwlib::wait_ms(6000);
             bz.HitSound();
-            hwlib::wait_ms(6000);
-            bz.GotKilledSound();
-            hwlib::wait_ms(6000);
-            bz.LastMinuteSound();
-            hwlib::wait_ms(6000);
-            bz.YouKilledSound();
+            //hwlib::wait_ms(6000);
+            //bz.GotKilledSound();
+            //hwlib::wait_ms(6000);
+            //bz.LastMinuteSound();
+            //hwlib::wait_ms(6000);
+            //bz.YouKilledSound();
             hwlib::wait_ms(6000);
         }
     }

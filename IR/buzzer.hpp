@@ -34,21 +34,19 @@ private:
     }
     
     void playGotKilledSound(){
-        play( note{ note::E5,  note::dQ } );
-        play( note{ note::D5s, note::dQ } );
-        play( note{ note::E5,  note::dQ } ); 
+        play( note{ note::D5,  note::dQ } );
+        play( note{ note::C5,  note::dQ } );
+        play( note{ note::A4,  note::dH } );
     }
     
     void playLastMinuteSound(){
         play( note{ note::D5s, note::dQ } ); 
-        play( note{ note::E5,  note::dQ } );
-        play( note{ note::B4,  note::dQ } );
+        play( note{ note::A4,  note::dH } );
     }
     
     void playHitSound(){
-        play( note{ note::D5,  note::dQ } );
         play( note{ note::C5,  note::dQ } );
-        play( note{ note::A4,  note::dH } );
+        play( note{ note::C5,  note::dQ } );
     }
     
     void playGameOverSound(){
