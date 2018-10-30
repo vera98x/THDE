@@ -20,7 +20,7 @@ private:
 			{
 				previousShot = 1;
 				hwlib::cout<< "B" << previousShot << '\n';
-				shootGun();
+				//shootGun();
 			}
 			if(gunTrigger.get()==1 && previousShot == 1)
 			{
@@ -36,11 +36,6 @@ public:
 		gunTrigger(gunTrigger),
 		gunShotFlag(this, "gunShotFlag")
 		{}
-	
-	void shootGun()
-	{
-		gunShotFlag.set();
-	}
 
 };
 

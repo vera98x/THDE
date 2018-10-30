@@ -15,7 +15,7 @@ private:
     buzzer & bz;
     ir_send & encoder;
 	OLEDcontroller & window;
- 
+    bool values[16] = {1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0};
  
     struct playerInfo{
         int playerNR;
@@ -26,16 +26,18 @@ private:
     
     void main() override {
         const char* c = "hello"; 
-		while(1){
+		encoder.setIrpattern(22, 0);
+        while(1){
             //bz.GameOverSound();
             //hwlib::wait_ms(6000);
-            bz.HitSound();
+            //bz.HitSound();
             //hwlib::wait_ms(6000);
             //bz.GotKilledSound();
             //hwlib::wait_ms(6000);
             //bz.LastMinuteSound();
             //hwlib::wait_ms(6000);
             //bz.YouKilledSound();
+            
             hwlib::wait_ms(6000);
 			window.showHPchanged(60);
 			hwlib::wait_ms(11111);
