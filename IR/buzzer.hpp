@@ -79,8 +79,8 @@ private:
                 playHitSound();
             } else if(done == killFlag){
                 playYouKilledSound();
-            }     
-                        
+            }
+			
             hwlib::wait_ms(6000);
         }
     }
