@@ -3,6 +3,7 @@
 #include "ir_detector.hpp"
 #include "buzzer.hpp"
 #include "runGameController.hpp"
+#include "button.hpp"
 
 
 
@@ -26,6 +27,9 @@ int main( void )
 	auto font = hwlib::font_default_8x8();
 	auto display = hwlib::window_ostream( oled, font );
 	OLEDcontroller window(font, display);
+	//button
+	auto gunTrigger = target::pin_in(target::pins::d5);
+	
    
    ir_send transmitter = ir_send(encoder);
    buzzer buzzertask = buzzer(lsp);
@@ -34,6 +38,8 @@ int main( void )
    
    ir_decoder decoder = ir_decoder(rGC, 300);
    ir_detector detector(decoder, listener);
+   
+   button b(gunTrigger);
    
    rtos::run();
    
