@@ -39,7 +39,7 @@ private:
 			}
 			else if(done == gameOverFlag)
 			{
-				flushGameOver();
+				//flushGameOver();
 			}
 			hwlib::wait_ms(6000);
 		}
@@ -93,7 +93,7 @@ OLEDcontroller(hwlib::font_default_8x8 & font, hwlib::window_ostream & display):
 		killerFlag.set();
 	}
 	
-	void flushGameOver()
+	void showGameOver()
 	{
 		gameOverFlag.set();
 	}

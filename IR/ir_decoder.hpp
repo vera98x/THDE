@@ -79,7 +79,7 @@ public:
     delay (delay)
 	{}
 	
-	void setChannel(const uint16_t & firstSet)
+	void addPattern(const uint16_t & firstSet)
 	{
 		value f {firstSet};
 		irReceiveQueue.write(f);

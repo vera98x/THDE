@@ -12,7 +12,7 @@
 SOURCES := 
 
 # header files in this project
-HEADERS := ir_decoder.hpp ir_detector.hpp ir_send.hpp buzzer.hpp runGameController.hpp OLEDcontroller.hpp button.hpp
+HEADERS := ir_decoder.hpp ir_detector.hpp ir_send.hpp buzzer.hpp runGameController.hpp OLEDcontroller.hpp button.hpp msg.hpp
 
 # other places to look for files for this project
 SEARCH  := ../w1-library
