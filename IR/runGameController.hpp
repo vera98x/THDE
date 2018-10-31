@@ -29,7 +29,7 @@ private:
     rtos::channel<playerInfo, 1024> playerInfoQueue;
     rtos::channel<msg, 1024> cmdChannelIn;
     
-    enum class STATE {IDLE, STARTUP, RUNNING, DEAD, GAMEOVER};
+    enum class STATE {STARTUP, RUNNING, DEAD, GAMEOVER};
 	enum STATE state;
     rtos::timer timeout_timer;
     int gameoverTime = 60000;
@@ -44,11 +44,6 @@ private:
 		encoder.setIrpattern(22, 0);
         while(1){
             switch(state) {
-				case STATE::IDLE:
-                    /*auto wificonfirm = cmdChannelIn.read();
-                    (void) wificonfirm;
-                    state = STATE::STARTUP;*/
-                    break;
                 case STATE::STARTUP:
                     {
                         msg message = cmdChannelIn.read();
@@ -81,8 +76,8 @@ private:
                         auto done = wait(playerInfoQueue + cmdChannelIn);
                         if (done == playerInfoQueue){
                             auto pi = playerInfoQueue.read();
-                            auto dmg = pi.dmg;
-                            HP -= dmg*10;
+                            auto dmg_enemy = pi.dmg;
+                            HP -= dmg_enemy*10;
                             
                             if (HP <= 0){
                                 //msg m = {CMD::T_KILLED_BY, "", pi.playerNR};
@@ -122,6 +117,9 @@ private:
                             msg cmd_msg = cmdChannelIn.read();
                             if (cmd_msg.command == cmd_msg.CMD::R_GAME_OVER){
                                 timeout_timer.set( gameoverTime );
+                                encoder.disable();
+                                display.showGameOver();
+                                bz.gameOverSound();
                                 state = STATE::GAMEOVER;
                             } else if (cmd_msg.command == cmd_msg.CMD::R_LAST_MINUTE){
                                 bz.lastMinuteSound();
@@ -137,9 +135,6 @@ private:
                     break;
                 
                 case STATE::GAMEOVER:
-                    encoder.disable();
-                    display.showGameOver();
-                    bz.gameOverSound();
                     auto done = wait(timeout_timer);
                     if (done == timeout_timer){
                         state = STATE::STARTUP;
@@ -158,7 +153,7 @@ public:
     HP (100),
     playerInfoQueue(this, "playerInfoQueue"),
     cmdChannelIn(this, "cmdChannelIn"),
-    state(STATE::IDLE),
+    state(STATE::STARTUP),
     timeout_timer (this, "timeout_timer")
     {}
     
