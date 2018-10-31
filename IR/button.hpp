@@ -28,7 +28,7 @@ private:
 			{
 				previousShot = 0;
 			}
-			hwlib::wait_ms(10);
+			hwlib::wait_ms(5);
 		}
 	}
 	

@@ -12,10 +12,12 @@ private:
 	hwlib::window_ostream & display;
 	
 	rtos::flag HPChangedflag;
+	rtos::flag yourNameFlag;
 	rtos::flag killerFlag;
 	rtos::flag oneMinuteFlag;
 	rtos::flag gameOverFlag;
 	rtos::pool <int> HPInfoPool;
+	rots::pool <const char *> yourNamePool;
 	rtos::pool <const char *> killerInfoPool;
 	
 	char  * killerName [];
@@ -24,11 +26,15 @@ private:
 	{
 		for(;;)
 		{
-			auto done = wait(HPChangedflag + oneMinuteFlag + killerFlag + gameOverFlag);
+			auto done = wait(HPChangedflag + yourNameFlag + oneMinuteFlag + killerFlag + gameOverFlag);
 			if (done == HPChangedflag)
 			{
 				flushHPchanged();
-			} 
+			}
+			else if(done == yourNameFlag)
+			{
+				flushYourName();
+			}
 			else if(done == oneMinuteFlag)
 			{
 				flushOneMinute();
@@ -51,10 +57,12 @@ OLEDcontroller(hwlib::font_default_8x8 & font, hwlib::window_ostream & display):
 	font(font),
 	display(display),
 	HPChangedflag(this, "HPChangedFlag"),
+	yourNameFlag(this, "yourNameFlag"),
 	killerFlag(this, "killerFlag"),
 	oneMinuteFlag(this, "oneMinuteFlag"),
 	gameOverFlag(this, "gameOverFlag"),
 	HPInfoPool("HPinfoPool"),
+	yourNamePool("yourNamePool"),
 	killerInfoPool("killerInfoPool")
 	{}
 	
@@ -69,6 +77,17 @@ OLEDcontroller(hwlib::font_default_8x8 & font, hwlib::window_ostream & display):
 	{
 		HPInfoPool.write(HP);
 		HPChangedflag.set();
+	}
+	
+	void flushYourName()
+	{
+		const char * yourNewName = yourNamePool.read();
+		display << "\f" << "   Welcome: "<< "\n" << "\n" << yourNewName << '\n' << "\n"<< "  to the match!"<< hwlib::flush;
+	}
+	
+	void showYourName()
+	{
+		yourNameFlag.set();
 	}
 	
 	void flushOneMinute()
@@ -93,9 +112,14 @@ OLEDcontroller(hwlib::font_default_8x8 & font, hwlib::window_ostream & display):
 		killerFlag.set();
 	}
 	
-	void flushGameOver()
+	void setGameOver()
 	{
 		gameOverFlag.set();
+	}
+	
+	void flushGameOver()
+	{
+		display << "\f" << "    GAME "<< "\n"  << "\n" << "    OVER"  << '\n' << "\n" << "   !YOU SUCK!"<< hwlib::flush;
 	}
 	
 };
