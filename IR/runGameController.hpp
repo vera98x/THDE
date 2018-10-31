@@ -33,6 +33,7 @@ private:
 	enum STATE state;
     rtos::timer timeout_timer;
     int gameoverTime = 60000;
+    int killedTime = 6000;
     
     
     void main() override {
@@ -87,7 +88,8 @@ private:
                                 //msg m = {CMD::T_KILLED_BY, "", pi.playerNR};
                                 //wifi.send(m);
                                 encoder.disable();
-                                HP = HP_total;                               timeout_timer.set( 6000 );
+                                HP = HP_total;                               
+                                timeout_timer.set( killedTime );
                                 state = STATE::DEAD;
                             } else {
                                 bz.hitSound();
