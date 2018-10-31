@@ -23,28 +23,43 @@ private:
     };
     
     rtos::channel<playerInfo, 1024> playerInfoQueue;
+    rtos::channel<playerInfo, 1024> cmdChannelIn;
+    
+    enum class STATE {IDLE, STARTUP, RUNNING, GAMEOVER};
+	enum STATE state;
+    
     
     void main() override {
-        const char* c = "hello"; 
+        //const char* c = "hello"; 
 		encoder.setIrpattern(22, 0);
         while(1){
-            //bz.GameOverSound();
-            //hwlib::wait_ms(6000);
-            //bz.HitSound();
-            //hwlib::wait_ms(6000);
-            //bz.GotKilledSound();
-            //hwlib::wait_ms(6000);
-            //bz.LastMinuteSound();
-            //hwlib::wait_ms(6000);
-            //bz.YouKilledSound();
-            
-            hwlib::wait_ms(6000);
-			window.showHPchanged(60);
-			hwlib::wait_ms(11111);
-			window.showKiller(c);
-			hwlib::wait_ms(11111);
-			window.showOneMinute();
-			hwlib::wait_ms(11111);
+            switch(state) {
+				case STATE::IDLE:
+                    //wifi.connect();
+                    //if (wifi.connected){
+                        //state = STATE::STARTUP()
+                    //}
+                    break;
+                case STATE::STARTUP:
+                    //if(wifi.spelernaam){
+                        //window.showSpelernaam();
+                    //}
+                    //encoder.setIrpattern(wifi.spelerID, wifi.dmg)
+                    
+                    //if (wifi.startgame){
+                        //state = STATE::RUNNING;
+                    //}
+                    break;
+                    
+                    
+                case STATE::RUNNING:
+                    encoder.enable();
+                    //auto done = wait()
+                    break;
+                
+                case STATE::GAMEOVER:
+                    break;
+            }
         }
     }
     
@@ -54,13 +69,19 @@ public:
     bz (bz),
     encoder ( encoder ),
 	window(window),
-    playerInfoQueue(this, "playerInfoQueue")
+    playerInfoQueue(this, "playerInfoQueue"),
+    cmdChannelIn(this, "cmdChannelIn"),
+    state(STATE::IDLE)
     {}
     
     void sendPlayerInfo(int playerNR, int gunNR){
         playerInfo pi{playerNR, gunNR};
         playerInfoQueue.write(pi);
     }
+    
+    /*void sendCmd(){
+        cmdChannelIn.write();
+    }*/
 
     
     
