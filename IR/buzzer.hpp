@@ -94,23 +94,23 @@ public:
     killFlag(this, "killFlag")
     {}
     
-    void GotKilledSound(){
+    void gotKilledSound(){
         gotKilledFlag.set();
     }
     
-    void LastMinuteSound(){
+    void lastMinuteSound(){
         lastMinuteFlag.set();
     }
     
-    void HitSound(){
+    void hitSound(){
         hitFlag.set();
     }
     
-    void GameOverSound(){
+    void gameOverSound(){
         gameOverFlag.set();
     }
     
-    void YouKilledSound(){
+    void youKilledSound(){
         killFlag.set();
     }
     

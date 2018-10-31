@@ -51,7 +51,7 @@ private:
 					if(counter >= 16)
 					{
 						hwlib::cout << "new bit \n";
-                        decoder.setChannel(firstSet);
+                        decoder.addPattern(firstSet);
 						counter = 0;
 						timerValue = 100;
 						state = STATE::WAITING;

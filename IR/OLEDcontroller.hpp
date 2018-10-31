@@ -45,7 +45,7 @@ private:
 			}
 			else if(done == gameOverFlag)
 			{
-				flushGameOver();
+				//flushGameOver();
 			}
 			hwlib::wait_ms(6000);
 		}
@@ -111,8 +111,7 @@ OLEDcontroller(hwlib::font_default_8x8 & font, hwlib::window_ostream & display):
 		killerInfoPool.write(name);
 		killerFlag.set();
 	}
-	
-	void setGameOver()
+	void showGameOver()
 	{
 		gameOverFlag.set();
 	}
