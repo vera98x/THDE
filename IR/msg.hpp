@@ -21,6 +21,7 @@ public:
 	};
 
 
+
 	CMD command = CMD::N_NOTINITIALISED;
 	char naam[15] = "";
 	uint8_t waarde = 0;
