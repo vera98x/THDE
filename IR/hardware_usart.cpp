@@ -138,6 +138,16 @@ namespace UARTLib {
 		return true;
 	}
 
+	bool HardwareUART::send(const hwlib::string<0> &str) {
+		if(!USARTControllerInitialized){
+			return false;
+		}
+		for(auto c : str){
+			sendByte(c);
+		}
+		return true;
+	}
+
 	uint8_t HardwareUART::receive() {
 		if (!USARTControllerInitialized || !rxBuffer.count()) {
 			return 0;
