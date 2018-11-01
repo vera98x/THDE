@@ -4,17 +4,19 @@
 
 #ifndef UART_WIFITAAK_HPP
 #define UART_WIFITAAK_HPP
+
 #include "hwlib.hpp"
 #include "rtos.hpp"
 #include "msg.hpp"
 #include "hardware_usart.hpp"
 #include "commandListener.hpp"
-class WifiTaak : rtos::task<>,  commandListener{
+
+class WifiTaak : rtos::task<>, commandListener {
 private:
 	rtos::channel<msg, 10> cmdChannelOut;
 	UARTLib::HardwareUART &wifi_chip;
 	rtos::timer waiting_timeout;
-	commandListener * cl;
+	commandListener *cl;
 	enum class STATE {
 		LISTENING,
 		SENDING,
@@ -25,58 +27,57 @@ private:
 
 	void main() override {
 		for (;;) {
-			switch (state){
-				case STATE::WAITING:
-				{
-					if(wifi_chip.char_available()){
+			switch (state) {
+				case STATE::WAITING: {
+					if (wifi_chip.char_available()) {
 						state = STATE::LISTENING;
 					}
 					waiting_timeout.set(100);
 					auto e = wait(waiting_timeout + cmdChannelOut);
-					if(e == cmdChannelOut) {
+					if (e == cmdChannelOut) {
 						state = STATE::SENDING;
 					}
+					hwlib::wait_us(100);
 				}
-				break;
-				case STATE::LISTENING:
-				{
+					break;
+				case STATE::LISTENING: {
 					hwlib::string<30> s;
-					while(wifi_chip.char_available()){
-						s<<wifi_chip.getc();
+					while (wifi_chip.char_available()) {
+						s << wifi_chip.getc();
 					}
 					msg received(s);
 					cl->commandReceived(received);
+					state = STATE::WAITING;
 				}
-				break;
-				case STATE::SENDING:
-				{
+					break;
+				case STATE::SENDING: {
 					msg m = cmdChannelOut.read();
 					hwlib::string<30> s = "";
 					m.serialize(s);
-					//wifi_chip.send(s);
+					wifi_chip.send(s);
+					state = STATE::WAITING;
 				}
 			}
 		}
 	}
 
 public:
-	WifiTaak(UARTLib::HardwareUART &ESP, commandListener * cl = nullptr) :
-		task(4, "WiFi Taak"),
-		cmdChannelOut(this, "cmdChannelIn (WiFiTaak)"),
-		wifi_chip(ESP),
-		waiting_timeout(this, "WifiTaak waiting timeout"),
-		cl(cl),
-		state(STATE::WAITING)
-	    {}
+	WifiTaak(UARTLib::HardwareUART &ESP, commandListener *cl = nullptr) :
+			task(4, "WiFi Taak"),
+			cmdChannelOut(this, "cmdChannelIn (WiFiTaak)"),
+			wifi_chip(ESP),
+			waiting_timeout(this, "WifiTaak waiting timeout"),
+			cl(cl),
+			state(STATE::WAITING) {}
 
-	void commandReceived(const msg & m) {
+	void commandReceived(const msg &m) {
 		cmdChannelOut.write(m);
 	}
-    
-    void setListener(commandListener * cl_def){
-        cl = cl_def;
-    }
-    
+
+	void setListener(commandListener *cl_def) {
+		cl = cl_def;
+	}
+
 };
 
 
