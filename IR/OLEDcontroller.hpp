@@ -103,7 +103,7 @@ OLEDcontroller(hwlib::font_default_8x8 & font, hwlib::window_ostream & display):
 	void flushKiller()
 	{
 		const char * newName = killerInfoPool.read();
-		display << "\f" << "Je moordenaar is "<< "\n"  << "\n" << newName  << '\n' << "\n" << "TERUG NAAR SPAWN!"<< hwlib::flush;
+		display << "\f" << "  YOUR KILLER IS:  "<< "\n"  << "\n" << newName  << '\n' << "\n" << "!BACK TO SPAWN!"<< hwlib::flush;
 	}
 	
 	void showKiller(const char * name)
@@ -111,15 +111,17 @@ OLEDcontroller(hwlib::font_default_8x8 & font, hwlib::window_ostream & display):
 		killerInfoPool.write(name);
 		killerFlag.set();
 	}
-	void showGameOver()
-	{
-		gameOverFlag.set();
-	}
 	
 	void flushGameOver()
 	{
 		display << "\f" << "    GAME "<< "\n"  << "\n" << "    OVER"  << '\n' << "\n" << "   !YOU SUCK!"<< hwlib::flush;
 	}
+	
+	void showGameOver()
+	{
+		gameOverFlag.set();
+	}
+	
 	
 };
 #endif //OLEDCONTROLLER_HPP

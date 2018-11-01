@@ -12,7 +12,7 @@
 SOURCES := hardware_usart.cpp WifiTaak.cpp
 
 # header files in this project
-HEADERS := ir_decoder.hpp ir_detector.hpp ir_send.hpp buzzer.hpp runGameController.hpp OLEDcontroller.hpp button.hpp msg.hpp WifiTaak.hpp hardware_usart.hpp
+HEADERS := ir_decoder.hpp ir_detector.hpp ir_send.hpp buzzer.hpp runGameController.hpp OLEDcontroller.hpp button.hpp msg.hpp commandListener.hpp WifiTaak.hpp hardware_usart.hpp
 
 # other places to look for files for this project
 SEARCH  := ../w1-library

@@ -28,26 +28,27 @@ int main( void )
 	auto oled    = hwlib::glcd_oled( i2c_bus, 0x3c );
 	auto font = hwlib::font_default_8x8();
 	auto display = hwlib::window_ostream( oled, font );
-	OLEDcontroller window(font, display);
+
 	//button
 	auto gunTrigger = target::pin_in(target::pins::d5);
 	UARTLib::HardwareUART wifi_chip = UARTLib::HardwareUART(2400, UARTLib::HardwareUART::UARTController::THREE);
 	wifi_chip.begin();
 
 	WifiTaak WT(wifi_chip, nullptr);
-   
-   ir_send transmitter = ir_send(encoder);
-   buzzer buzzertask = buzzer(lsp);
-   
-   runGameController rGC(buzzertask, transmitter, window, &WT);
-   WT.setListener(& rGC);
-   ir_decoder decoder = ir_decoder(rGC, 300);
-   ir_detector detector(decoder, listener);
-   
-   button b(gunTrigger, transmitter);
-   
-   rtos::run();
-   
-   
-   return 0;
+
+	OLEDcontroller window(font, display);
+	ir_send transmitter = ir_send(encoder);
+	buzzer buzzertask = buzzer(lsp);
+
+	runGameController rGC(buzzertask, transmitter, window, &WT);
+	WT.setListener(& rGC);
+	ir_decoder decoder = ir_decoder(rGC, 300);
+	ir_detector detector(decoder, listener);
+
+	button b(gunTrigger, transmitter);
+
+	rtos::run();
+
+
+	return 0;
 }
