@@ -10,7 +10,7 @@
 #include "msg.hpp"
 #include "commandListener.hpp"
 
-class runGameController : public rtos::task<>, commandListener{
+class runGameController : public rtos::task<>, public commandListener{
     
 private:
     buzzer & bz;
