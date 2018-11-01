@@ -25,58 +25,14 @@ private:
 	};
 	STATE state;
 
-	void main() override {
-		for (;;) {
-			switch (state) {
-				case STATE::WAITING: {
-					if (wifi_chip.char_available()) {
-						state = STATE::LISTENING;
-					}
-					waiting_timeout.set(100);
-					auto e = wait(waiting_timeout + cmdChannelOut);
-					if (e == cmdChannelOut) {
-						state = STATE::SENDING;
-					}
-					hwlib::wait_us(100);
-				}
-					break;
-				case STATE::LISTENING: {
-					hwlib::string<30> s;
-					while (wifi_chip.char_available()) {
-						s << wifi_chip.getc();
-					}
-					msg received(s);
-					cl->commandReceived(received);
-					state = STATE::WAITING;
-				}
-					break;
-				case STATE::SENDING: {
-					msg m = cmdChannelOut.read();
-					hwlib::string<30> s = "";
-					m.serialize(s);
-					wifi_chip.send(s);
-					state = STATE::WAITING;
-				}
-			}
-		}
-	}
+	void main() override ;
 
 public:
-	WifiTaak(UARTLib::HardwareUART &ESP, commandListener *cl = nullptr) :
-			task(4, "WiFi Taak"),
-			cmdChannelOut(this, "cmdChannelIn (WiFiTaak)"),
-			wifi_chip(ESP),
-			waiting_timeout(this, "WifiTaak waiting timeout"),
-			cl(cl),
-			state(STATE::WAITING) {}
+	WifiTaak(UARTLib::HardwareUART &ESP, commandListener *cl = nullptr);
 
-	void commandReceived(const msg &m) {
-		cmdChannelOut.write(m);
-	}
+	void commandReceived(const msg &m);
 
-	void setListener(commandListener *cl_def) {
-		cl = cl_def;
-	}
+	void setListener(commandListener *cl_def);
 
 };
 
