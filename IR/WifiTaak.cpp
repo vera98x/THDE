@@ -9,7 +9,7 @@
 #include "WifiTaak.hpp"
 
 WifiTaak::WifiTaak(UARTLib::HardwareUART &ESP, commandListener *cl) :
-	task(4, "WiFi Taak"),
+	task(9, "WiFi Taak"),
 	cmdChannelOut(this, "cmdChannelIn (WiFiTaak)"),
 	wifi_chip(ESP),
 	waiting_timeout(this, "WifiTaak waiting timeout"),
