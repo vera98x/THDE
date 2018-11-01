@@ -18,11 +18,14 @@ WifiTaak::WifiTaak(UARTLib::HardwareUART &ESP, commandListener *cl) :
 	{}
 
 void WifiTaak::main(){
-	for (;;) {
+	hwlib::string<30> s;
+    for (;;) {
 		switch (state) {
 			case STATE::WAITING: {
-				if (wifi_chip.char_available()) {
-					state = STATE::LISTENING;
+				
+                if (wifi_chip.char_available()) {
+                    hwlib::wait_us(5000);
+                    state = STATE::LISTENING;
 				}
 				waiting_timeout.set(100);
 				auto e = wait(waiting_timeout + cmdChannelOut);
@@ -33,13 +36,24 @@ void WifiTaak::main(){
 			}
 				break;
 			case STATE::LISTENING: {
-				hwlib::string<30> s;
-				while (wifi_chip.char_available()) {
-					s << wifi_chip.getc();
+				
+				char c;
+                if (wifi_chip.char_available()) {
+					c = wifi_chip.getc();
+                    s << c;
+                    
+                    hwlib::wait_us(100);
 				}
-				msg received(s);
-				cl->commandReceived(received);
-				state = STATE::WAITING;
+                if (c == ';'){
+                    hwlib::cout<<"test \n";
+                    hwlib::cout<< s << " \n";
+                    msg received(s);
+                    cl->commandReceived(received);
+                    hwlib::cout<< "heeeeb" << " \n";
+                
+                    state = STATE::WAITING;
+                    s = "";
+                }
 			}
 				break;
 			case STATE::SENDING: {
@@ -47,6 +61,7 @@ void WifiTaak::main(){
 				hwlib::string<30> s = "";
 				m.serialize(s);
 				wifi_chip.send(s);
+                hwlib::cout<< s << " \n";
 				state = STATE::WAITING;
 			}
 		}

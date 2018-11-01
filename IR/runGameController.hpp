@@ -49,21 +49,28 @@ private:
                     {
                         msg message = cmdChannelIn.read();
                         if(message.command == message.CMD::R_PLAYER_NAME){
-                            //display.showSpelernaam(message.naam);
+                            hwlib::cout<< "R_PLAYER_NAME \n";
+                            display.showYourName(message.naam);
                         } else if (message.command == message.CMD::R_PLAYER_ID){
                             spelerID = message.waarde;
+                            hwlib::cout<< "R_PLAYER_ID \n";
                         } else if (message.command == message.CMD::R_SELECTED_DMG){
                             dmg = message.waarde/10;
+                            hwlib::cout<< dmg << "R_SELECTED_DMG \n";
                         } else if (message.command == message.CMD::R_START_GAME){
+                            hwlib::cout<< "R_START_GAME \n";
                             readyToStart = 1;
                             if (spelerID == 0){
-                                //msg m = {CMD::T_REQ_PLAYERID, "", 0};
-                                //wifi.send(m);
+                                msg m = {};
+                                m.command = msg::CMD::T_REQ_PLAYERID;
+                                cl -> commandReceived(m);
                             }
                         } else if (message.command == message.CMD::R_HP){
+                            hwlib::cout<< "R_HP \n";
                             HP_total = message.waarde;
                             HP = HP_total;
                         } else if (spelerID > 0 && readyToStart){
+                            hwlib::cout<< "staaarrtt \n";
                             encoder.setIrpattern(spelerID, dmg);
                             encoder.enable();
                             state = STATE::RUNNING;
@@ -81,8 +88,10 @@ private:
                             HP -= dmg_enemy*10;
                             
                             if (HP <= 0){
-                                //msg m = {CMD::T_KILLED_BY, "", pi.playerNR};
-                                //wifi.send(m);
+                                msg m = {};
+                                m.command = msg::CMD::T_KILLED_BY;
+                                m.waarde = pi.playerNR;
+                                cl -> commandReceived(m);
                                 encoder.disable();
                                 HP = HP_total;                               
                                 timeout_timer.set( killedTime );

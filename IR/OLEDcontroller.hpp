@@ -85,9 +85,10 @@ OLEDcontroller(hwlib::font_default_8x8 & font, hwlib::window_ostream & display):
 		display << "\f" << "   Welcome: "<< "\n" << "\n" << yourNewName << '\n' << "\n"<< "  to the match!"<< hwlib::flush;
 	}
 	
-	void showYourName()
+	void showYourName(char c[15])
 	{
-		yourNameFlag.set();
+		yourNamePool.write(c);
+        yourNameFlag.set();
 	}
 	
 	void flushOneMinute()

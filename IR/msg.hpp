@@ -15,6 +15,7 @@ public:
 		R_GAME_OVER,    //7
 		T_KILLED_BY,    //8
 		R_HP,           //9
+        T_REQ_PLAYERID,
 
 		N_NOTINITIALISED
 
