@@ -60,8 +60,14 @@ private:
 	}
 
 public:
-	WifiTaak(UARTLib::HardwareUART &ESP, commandListener * cl = nullptr) : task(4, "WiFi Taak"), cl(cl), state(STATE::WAITING),
-										   cmdChannelOut(this, "cmdChannelIn (WiFiTaak)"), wifi_chip(ESP), waiting_timeout(this, "WifiTaak waiting timeout") {}
+	WifiTaak(UARTLib::HardwareUART &ESP, commandListener * cl = nullptr) :
+		task(4, "WiFi Taak"),
+		cmdChannelOut(this, "cmdChannelIn (WiFiTaak)"),
+		wifi_chip(ESP),
+		waiting_timeout(this, "WifiTaak waiting timeout"),
+		cl(cl),
+		state(STATE::WAITING)
+	    {}
 
 	void commandReceived(const msg & m) {
 		cmdChannelOut.write(m);
