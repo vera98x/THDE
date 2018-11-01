@@ -28,6 +28,7 @@ private:
 	void main() override ;
 
 public:
+
 	WifiTaak(UARTLib::HardwareUART &ESP, commandListener *cl = nullptr);
 
 	void commandReceived(const msg &m);
