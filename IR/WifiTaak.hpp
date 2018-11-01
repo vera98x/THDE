@@ -55,6 +55,11 @@ public:
 	void commandReceived(const msg & m) {
 		cmdChannelOut.write(m);
 	}
+    
+    void setListener(commandListener * cl_def){
+        cl = cl_def;
+    }
+    
 };
 
 
