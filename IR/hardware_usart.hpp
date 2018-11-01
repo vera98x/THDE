@@ -113,6 +113,13 @@ namespace UARTLib {
 		bool send(const uint8_t *data, size_t length) ;
 
 		/**
+		 * @brief Send a hwlib::string
+		 * @param str hwlib::string
+		 * @return true String has been sent
+		 * @return false String has not been sent, USART controller not initialized
+		 */
+		bool send(const hwlib::string<0> & str);
+		/**
 		 * @brief Receive a single byte.
 		 *
 		 * By popping the first element of the receive buffer, we return a received byte in a FIFO manner.
