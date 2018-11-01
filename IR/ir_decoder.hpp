@@ -74,7 +74,7 @@ public:
 	ir_decoder(runGameController & rGC, int delay):
 	task(4, "ir_decoder"),
 	irReceiveQueue(this, "irChannel"),
-    state(STATE::DECODING),
+    state(STATE::IDLE),
     rGC (rGC),
     delay (delay)
 	{}

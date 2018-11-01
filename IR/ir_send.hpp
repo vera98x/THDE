@@ -20,7 +20,7 @@ private:
     void main() override{
         
        while (1){
-		   hwlib::cout << "start" << "\n";
+		   //hwlib::cout << "start" << "\n";
            auto done = wait(sendIRFlag + enableFlag + disableFlag);
            if(1){
                for (int i = 0; i < 2; i++){
