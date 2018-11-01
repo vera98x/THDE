@@ -11,7 +11,7 @@
 #include "hardware_usart.hpp"
 #include "commandListener.hpp"
 
-class WifiTaak : rtos::task<>, commandListener {
+class WifiTaak : rtos::task<>, public commandListener {
 private:
 	rtos::channel<msg, 10> cmdChannelOut;
 	UARTLib::HardwareUART &wifi_chip;

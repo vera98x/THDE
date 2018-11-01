@@ -4,6 +4,8 @@
 #include "buzzer.hpp"
 #include "runGameController.hpp"
 #include "button.hpp"
+#include "WifiTaak.hpp"
+#include "hardware_usart.hpp"
 
 
 
@@ -29,13 +31,16 @@ int main( void )
 	OLEDcontroller window(font, display);
 	//button
 	auto gunTrigger = target::pin_in(target::pins::d5);
-	
+	UARTLib::HardwareUART wifi_chip = UARTLib::HardwareUART(2400, UARTLib::HardwareUART::UARTController::THREE);
+	wifi_chip.begin();
+
+	WifiTaak WT(wifi_chip, nullptr);
    
    ir_send transmitter = ir_send(encoder);
    buzzer buzzertask = buzzer(lsp);
    
-   runGameController rGC(buzzertask, transmitter, window);
-   
+   runGameController rGC(buzzertask, transmitter, window, &WT);
+   WT.setListener(& rGC);
    ir_decoder decoder = ir_decoder(rGC, 300);
    ir_detector detector(decoder, listener);
    
