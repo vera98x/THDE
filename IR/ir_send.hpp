@@ -41,14 +41,14 @@ private:
                    }
                   // hwlib::cout << "end  " << i << "\n";
                    encoder.set(0);
-                   hwlib::wait_ms(3000);
+                   hwlib::wait_ms(3);
                }
            } else if (done == enableFlag){
                state = STATE::ENABLED;
            } else if (done == disableFlag){
                state = STATE::DISABLED;
            }
-		   hwlib::wait_ms(4);
+		   hwlib::wait_us(30);
 		}
         
     }

@@ -52,24 +52,23 @@ private:
                 case STATE::DECODING:
                                     
                     if (verifyXOR(firstPattern)){
-                        timeout_timer.set(3'000'000);
-                        auto done = wait(timeout_timer + irReceiveQueue);
+                        auto done = wait(irReceiveQueue);
                         if (done == irReceiveQueue){
-                            hwlib::cout << "cleaaaar";
+                            hwlib::cout << "cleaaaar \n";
                             auto r = irReceiveQueue.read();
                             (void) r;
                             timeout_timer.cancel();
-                        } else{
-                            hwlib::cout << "timerEVENT!!";
-                        }
+                        } 
                         hwlib::cout << hwlib::_setbase(2);
                         hwlib::cout<< "bits: " << firstPattern << '\n';
                         hwlib::cout << hwlib::_setbase(10);
                         int playerNR = firstPattern >> 10;
                         int gunNR = (firstPattern >> 5) & 31; //11111
                         rGC.sendPlayerInfo(playerNR, gunNR);
-                        
+                        state = STATE::IDLE;
+                        break;
                     } else{
+                        hwlib::cout << "false xor";
                         uint16_t secondPattern = irReceiveQueue.read().r;
                         if (verifyXOR(secondPattern)){
                             int playerNR = secondPattern >> 10;
