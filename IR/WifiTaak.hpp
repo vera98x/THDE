@@ -13,7 +13,7 @@ class WifiTaak : rtos::task<>,  commandListener{
 private:
 	rtos::channel<msg, 10> cmdChannelOut;
 	UARTLib::HardwareUART &wifi_chip;
-	runGameController & r;
+	commandListener * cl;
 	enum class STATE {
 		LISTENING,
 		SENDING,
@@ -49,7 +49,7 @@ private:
 	}
 
 public:
-	WifiTaak(UARTLib::HardwareUART &ESP, runGameController & r) : task(4, "WiFi Taak"), r(r), state(STATE::WAITING),
+	WifiTaak(UARTLib::HardwareUART &ESP, commandListener * cl = nullptr) : task(4, "WiFi Taak"), cl(cl), state(STATE::WAITING),
 										   cmdChannelOut(this, "cmdChannelIn (WiFiTaak)"), wifi_chip(ESP) {}
 
 	void commandReceived(const msg & m) {
