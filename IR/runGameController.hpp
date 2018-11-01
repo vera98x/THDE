@@ -34,6 +34,7 @@ private:
     rtos::timer timeout_timer;
     int gameoverTime = 60000;
     int killedTime = 6000;
+    commandListener * cl;
     
     
     void main() override {
@@ -154,7 +155,8 @@ public:
     playerInfoQueue(this, "playerInfoQueue"),
     cmdChannelIn(this, "cmdChannelIn"),
     state(STATE::STARTUP),
-    timeout_timer (this, "timeout_timer")
+    timeout_timer (this, "timeout_timer"),
+    cl (nullptr)
     {}
     
     void sendPlayerInfo(int playerNR, int dmg){

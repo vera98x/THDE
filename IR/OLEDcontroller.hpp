@@ -17,7 +17,7 @@ private:
 	rtos::flag oneMinuteFlag;
 	rtos::flag gameOverFlag;
 	rtos::pool <int> HPInfoPool;
-	rots::pool <const char *> yourNamePool;
+	rtos::pool <const char *> yourNamePool;
 	rtos::pool <const char *> killerInfoPool;
 	
 	char  * killerName [];

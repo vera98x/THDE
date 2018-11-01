@@ -27,7 +27,7 @@ public:
 	uint8_t waarde = 0;
 
 	msg(){}
-	msg(hwlib::string<0> & s){
+	/*msg(hwlib::string<0> & s){
 		int colon = s.find(':');
 		int comma = s.find(',');
 		int semicolon = s.find(';');
@@ -51,7 +51,7 @@ public:
 			s << (waarde + '0');
 		}
 		s << ';';
-	}
+	}*/
 };
 
 #endif 
