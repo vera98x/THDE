@@ -21,7 +21,7 @@ private:
 			if(gunTrigger.get()==0 && previousShot == 0)
 			{
 				previousShot = 1;
-				hwlib::cout<< "B" << previousShot << '\n';
+				//hwlib::cout<< "B" << previousShot << '\n';
 				transmitter.shootGun();
 			}
 			if(gunTrigger.get()==1 && previousShot == 1)

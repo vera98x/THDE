@@ -19,15 +19,15 @@ private:
 	rtos::channel<value, 1024> irReceiveQueue;
     enum class STATE {IDLE, DECODING};
 	enum STATE state;
-	uint16_t firstPattern;
 	runGameController & rGC;
     int delay;
+    rtos::timer timeout_timer;
     
     
     bool verifyXOR(uint16_t d){
         for(unsigned int i=0; i<5; i++)
         {
-            if( (((firstPattern << (15-(6+i))) & 1)^( (firstPattern << (15-(1+i))) & 1)) != ((firstPattern << (15-(11+i))) & 1) )
+            if( (((d << (15-(6+i))) & 1)^( (d << (15-(1+i))) & 1)) != ((d << (15-(11+i))) & 1) )
             {
                 //hwlib::cout<< 1+i << " and " << 6+i << " are not XOR" << '\n';
                 return false;
@@ -39,6 +39,7 @@ private:
 	
 	void main( void ) override
 	{
+        uint16_t firstPattern;
 		for(;;)
 		{
 			switch(state)
@@ -49,23 +50,39 @@ private:
                     break;
                 
                 case STATE::DECODING:
-                    hwlib::cout << hwlib::_setbase(2);
-                    hwlib::cout<< "bits: " << firstPattern << '\n';
-                    hwlib::cout << hwlib::_setbase(10);
-                    
+                                    
                     if (verifyXOR(firstPattern)){
+                        timeout_timer.set(3'000'000);
+                        auto done = wait(timeout_timer + irReceiveQueue);
+                        if (done == irReceiveQueue){
+                            hwlib::cout << "cleaaaar";
+                            auto r = irReceiveQueue.read();
+                            (void) r;
+                            timeout_timer.cancel();
+                        } else{
+                            hwlib::cout << "timerEVENT!!";
+                        }
+                        hwlib::cout << hwlib::_setbase(2);
+                        hwlib::cout<< "bits: " << firstPattern << '\n';
+                        hwlib::cout << hwlib::_setbase(10);
                         int playerNR = firstPattern >> 10;
                         int gunNR = (firstPattern >> 5) & 31; //11111
-                        
                         rGC.sendPlayerInfo(playerNR, gunNR);
                         
-                    }
-                    
+                    } else{
+                        uint16_t secondPattern = irReceiveQueue.read().r;
+                        if (verifyXOR(secondPattern)){
+                            int playerNR = secondPattern >> 10;
+                            int gunNR = (secondPattern >> 5) & 31; //11111
+                            rGC.sendPlayerInfo(playerNR, gunNR);
+                        }
+                        
+                    }            
                     state = STATE::IDLE;
                     break;
             }
             
-            hwlib::wait_ms(delay);
+            hwlib::wait_us(delay);
 			
 		}
 	}
@@ -76,7 +93,8 @@ public:
 	irReceiveQueue(this, "irChannel"),
     state(STATE::IDLE),
     rGC (rGC),
-    delay (delay)
+    delay (delay),
+    timeout_timer (this, "timeout_timer")
 	{}
 	
 	void addPattern(const uint16_t & firstSet)

@@ -32,7 +32,7 @@ private:
     enum class STATE {STARTUP, RUNNING, DEAD, GAMEOVER};
 	enum STATE state;
     rtos::timer timeout_timer;
-    int gameoverTime = 60000;
+    int gameoverTime = 6000000;
     int killedTime = 6000;
     commandListener * cl;
     
@@ -111,10 +111,8 @@ private:
                 case STATE::DEAD:
                     {
                         bz.gotKilledSound();
-                        auto done = wait(timeout_timer + playerInfoQueue + cmdChannelIn);
-                        if (done == playerInfoQueue){
-                            playerInfoQueue.clear();
-                        } else if (done == cmdChannelIn) {
+                        auto done = wait(timeout_timer + cmdChannelIn);
+                        if (done == cmdChannelIn) {
                             msg cmd_msg = cmdChannelIn.read();
                             if (cmd_msg.command == cmd_msg.CMD::R_GAME_OVER){
                                 timeout_timer.set( gameoverTime );
@@ -130,6 +128,7 @@ private:
                             }
                         } else {
                             encoder.enable();
+                            playerInfoQueue.clear();
                             state = STATE::RUNNING;
                         }
                     }

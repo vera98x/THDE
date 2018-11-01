@@ -50,7 +50,6 @@ private:
 					
 					if(counter >= 16)
 					{
-						hwlib::cout << "new bit \n";
                         decoder.addPattern(firstSet);
 						counter = 0;
 						timerValue = 100;
