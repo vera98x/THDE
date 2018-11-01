@@ -27,7 +27,7 @@ public:
 	uint8_t waarde = 0;
 
 	msg(){}
-	/*msg(hwlib::string<0> & s){
+	msg(hwlib::string<0> & s){
 		int colon = s.find(':');
 		int comma = s.find(',');
 		int semicolon = s.find(';');
@@ -44,14 +44,15 @@ public:
 
 	void serialize(hwlib::string<0> & s){
 		s.clear();
-		s << "CMD:" << ((uint8_t)command + '0');
+		s << "CMD:";
+		s << (char)((uint8_t)command + '0');
 		if(command == CMD::R_PLAYER_NAME || command == CMD::R_KILLED_BY){
 			s << naam;
 		}else{
-			s << (waarde + '0');
+			s << (char)(waarde + '0');
 		}
 		s << ';';
-	}*/
+	}
 };
 
 #endif 
