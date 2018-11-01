@@ -8,8 +8,8 @@
 #include "rtos.hpp"
 #include "msg.hpp"
 #include "hardware_usart.hpp"
-
-class WifiTaak : rtos::task<> {
+#include "commandListener.hpp"
+class WifiTaak : rtos::task<>,  commandListener{
 private:
 	rtos::channel<msg, 10> cmdChannelOut;
 	UARTLib::HardwareUART &wifi_chip;
@@ -52,7 +52,7 @@ public:
 	WifiTaak(UARTLib::HardwareUART &ESP, runGameController & r) : task(4, "WiFi Taak"), r(r), state(STATE::WAITING),
 										   cmdChannelOut(this, "cmdChannelIn (WiFiTaak)"), wifi_chip(ESP) {}
 
-	void sendMsg(msg &m) {
+	void commandReceived(const msg & m) {
 		cmdChannelOut.write(m);
 	}
 };

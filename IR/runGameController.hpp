@@ -8,9 +8,9 @@
 #include "ir_send.hpp"
 #include "OLEDcontroller.hpp"
 #include "msg.hpp"
+#include "commandListener.hpp"
 
-
-class runGameController : public rtos::task<>{
+class runGameController : public rtos::task<>, commandListener{
     
 private:
     buzzer & bz;
@@ -162,7 +162,7 @@ public:
         playerInfoQueue.write(pi);
     }
     
-    void receiveCmd(msg m){
+    void commandReceived(const msg & m){
         cmdChannelIn.write(m);
     }
 
