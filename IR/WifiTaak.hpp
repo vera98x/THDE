@@ -4,7 +4,7 @@
 
 #ifndef UART_WIFITAAK_HPP
 #define UART_WIFITAAK_HPP
-
+#include "hwlib.hpp"
 #include "rtos.hpp"
 #include "msg.hpp"
 #include "hardware_usart.hpp"
@@ -13,6 +13,7 @@ class WifiTaak : rtos::task<>,  commandListener{
 private:
 	rtos::channel<msg, 10> cmdChannelOut;
 	UARTLib::HardwareUART &wifi_chip;
+	rtos::timer waiting_timeout;
 	commandListener * cl;
 	enum class STATE {
 		LISTENING,
@@ -30,7 +31,9 @@ private:
 					if(wifi_chip.char_available()){
 						state = STATE::LISTENING;
 					}
-					if(cmdChannelOut.getCurrentQSize() > 0){
+					waiting_timeout.set(100);
+					auto e = wait(waiting_timeout + cmdChannelOut);
+					if(e == cmdChannelOut) {
 						state = STATE::SENDING;
 					}
 				}
@@ -42,13 +45,22 @@ private:
 						s<<wifi_chip.getc();
 					}
 					msg received(s);
-					r.receiveCmd(received);
+					cl->commandReceived(received);
+				}
+				break;
+				case STATE::SENDING:
+				{
+					msg m = cmdChannelOut.read();
+					hwlib::string<30> s = "";
+					m.serialize(s);
+					//wifi_chip.send(s);
 				}
 			}
 		}
 	}
 
 public:
+<<<<<<< HEAD
 	WifiTaak(UARTLib::HardwareUART &ESP, commandListener * cl = nullptr) : 
 		task(4, "WiFi Taak"), 
 		cl(cl), 
@@ -56,6 +68,10 @@ public:
 		cmdChannelOut(this, "cmdChannelIn (WiFiTaak)"),
 		wifi_chip(ESP)
 		{}
+=======
+	WifiTaak(UARTLib::HardwareUART &ESP, commandListener * cl = nullptr) : task(4, "WiFi Taak"), cl(cl), state(STATE::WAITING),
+										   cmdChannelOut(this, "cmdChannelIn (WiFiTaak)"), wifi_chip(ESP), waiting_timeout(this, "WifiTaak waiting timeout") {}
+>>>>>>> c9750d98017e882e066995bcc9673ac8eb926835
 
 	void commandReceived(const msg & m) {
 		cmdChannelOut.write(m);
