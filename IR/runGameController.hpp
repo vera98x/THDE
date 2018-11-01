@@ -146,7 +146,7 @@ private:
     }
     
 public:
-    runGameController(buzzer & bz, ir_send & encoder, OLEDcontroller & display):
+    runGameController(buzzer & bz, ir_send & encoder, OLEDcontroller & display, commandListener * cl = nullptr):
     task(7, "runGameTask"),
     bz (bz),
     encoder ( encoder ),
@@ -156,7 +156,7 @@ public:
     cmdChannelIn(this, "cmdChannelIn"),
     state(STATE::STARTUP),
     timeout_timer (this, "timeout_timer"),
-    cl (nullptr)
+    cl (cl)
     {}
     
     void sendPlayerInfo(int playerNR, int dmg){
@@ -166,6 +166,10 @@ public:
     
     void commandReceived(const msg & m){
         cmdChannelIn.write(m);
+    }
+    
+    void setListener(commandListener * cl_def){
+        cl = cl_def;
     }
 
     
