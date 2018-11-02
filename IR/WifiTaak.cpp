@@ -49,12 +49,11 @@ void WifiTaak::main(){
                     hwlib::cout<< s << " \n";
                     msg received(s);
                     cl->commandReceived(received);
-                    hwlib::cout<< "heeeeb" << " \n";
-                
                     state = STATE::WAITING;
                     s = "";
                 }
 			}
+                hwlib::wait_us(100);
 				break;
 			case STATE::SENDING: {
 				msg m = cmdChannelOut.read();

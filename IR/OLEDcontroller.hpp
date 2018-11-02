@@ -82,7 +82,7 @@ OLEDcontroller(hwlib::font_default_8x8 & font, hwlib::window_ostream & display):
 	void flushYourName()
 	{
 		const char * yourNewName = yourNamePool.read();
-		display << "\f" << "   Welcome: "<< "\n" << "\n" << yourNewName << '\n' << "\n"<< "  to the match!"<< hwlib::flush;
+		display << "\f" << "   Welcome: "<< "\n" << "\n    " << yourNewName << '\n' << "\n"<< "  to the match!"<< hwlib::flush;
 	}
 	
 	void showYourName(char c[15])

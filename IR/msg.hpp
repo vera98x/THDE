@@ -29,9 +29,13 @@ public:
 
 	msg(){}
 	msg(hwlib::string<0> & s){
-		int colon = s.find(':');
+		hwlib::cout << "start contructor!!!! \n";
+        int colon = s.find(':');
+		hwlib::cout << "Colon: " << colon << '\n';
 		int comma = s.find(',');
+		hwlib::cout << "comma: " << comma << '\n';
 		int semicolon = s.find(';');
+		hwlib::cout << "semicolon: " << semicolon<< '\n';
 
 		command = static_cast<CMD>(s[colon+1] - '0');
 		if(command == CMD::R_PLAYER_NAME || command == CMD::R_KILLED_BY){
@@ -56,4 +60,4 @@ public:
 	}
 };
 
-#endif 
+#endif
