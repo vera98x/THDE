@@ -34,33 +34,39 @@ private:
     }
     
     void playGotKilledSound(){
-        play( note{ note::D5,  note::dQ } );
-        play( note{ note::C5,  note::dQ } );
-        play( note{ note::A4,  note::dH } );
+        play( note{ 100,  300000 } );
+        play( note{ 100,  300000 } );
+        play( note{ 100,  300000 } );
+        play( note{ 100,  300000 } );
     }
     
     void playLastMinuteSound(){
-        play( note{ note::D5s, note::dQ } ); 
-        play( note{ note::A4,  note::dH } );
+        play( note{ 100, 300000} ); 
+        play( note{ 1000,  300000 } );
+        play( note{ 2000, 300000 } );
+        play( note{ 5500,  300000 } );
+        play( note{ 2000,  300000 } );
+        play( note{ 1000,  300000 } );
+        play( note{ 100,  300000 } );
     }
     
     void playHitSound(){
-        play( note{ note::C5,  note::dQ } );
-        play( note{ note::C5,  note::dQ } );
+        play( note{ 555,  300000 } );
+        play( note{ 555,  300000 } );
     }
     
     void playGameOverSound(){
-        play( note{ 1318, 125000 } );
-        play( note{ 1174, 250000 } );
-        play( note{ 1046, 500000 } );
-        play( note{ 1318, 125000 } );
+        play( note{ 7777, 300000 } );
+        play( note{ 5555, 300000 } );
+        play( note{ 3333, 300000 } );
+        play( note{ 1111, 300000 } );
     }
     
     void playYouKilledSound(){
-        play( note{ 1046, 250000 } );
-        play( note{ 440, 125000 } );
-        play( note{ 784, 250000 } );
-        play( note{ 1318, 750000 } );
+        play( note{ 5555, 300000 } );
+        play( note{ 111, 300000 } );
+        play( note{ 5555, 300000 } );
+        play( note{ 111, 300000 } );
     }
     
     
