@@ -41,7 +41,6 @@ private:
         uint8_t spelerID = 0;
         uint8_t dmg = 3;
         bool readyToStart = 0;
-		encoder.setIrpattern(22, 3);
         while(1){
             switch(state) {
                 case STATE::STARTUP:
