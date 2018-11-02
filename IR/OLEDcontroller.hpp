@@ -45,9 +45,9 @@ private:
 			}
 			else if(done == gameOverFlag)
 			{
-				//flushGameOver();
+				flushGameOver();
 			}
-			hwlib::wait_ms(6000);
+			hwlib::wait_ms(6);
 		}
 	}
 	

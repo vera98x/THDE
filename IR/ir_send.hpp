@@ -22,7 +22,7 @@ private:
        while (1){
 		   //hwlib::cout << "start" << "\n";
            auto done = wait(sendIRFlag + enableFlag + disableFlag);
-           if(1){
+           if(done == sendIRFlag && state == STATE::ENABLED){
                for (int i = 0; i < 2; i++){
                    for(int i = 0; i < 16; i++){
                        if (values[i]){

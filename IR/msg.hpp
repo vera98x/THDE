@@ -15,7 +15,7 @@ public:
 		R_GAME_OVER,    //7
 		T_KILLED_BY,    //8
 		R_HP,           //9
-        T_REQ_PLAYERID,
+        T_REQ_PLAYERID, // 10
 
 		N_NOTINITIALISED
 
@@ -50,10 +50,11 @@ public:
 	void serialize(hwlib::string<0> & s){
 		s.clear();
 		s << "CMD:";
-		s << (char)((uint8_t)command + '0');
+		s << (char)((uint8_t)command + '0') << ',';
 		if(command == CMD::R_PLAYER_NAME || command == CMD::R_KILLED_BY){
 			s << naam;
 		}else{
+            hwlib::cout << waarde << '\n';
 			s << (char)(waarde + '0');
 		}
 		s << ';';

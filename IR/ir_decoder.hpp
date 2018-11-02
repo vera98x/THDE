@@ -36,6 +36,11 @@ private:
         return true;
     }
     
+    void sendPattern(uint16_t pattern){
+        uint8_t playerNR = (pattern >> 10) & 31;
+        uint8_t gunNR = (pattern >> 5) & 31; //11111
+        rGC.sendPlayerInfo(playerNR, gunNR);
+    }
 	
 	void main( void ) override
 	{
@@ -57,23 +62,18 @@ private:
                             hwlib::cout << "cleaaaar \n";
                             auto r = irReceiveQueue.read();
                             (void) r;
-                            timeout_timer.cancel();
                         } 
                         hwlib::cout << hwlib::_setbase(2);
                         hwlib::cout<< "bits: " << firstPattern << '\n';
                         hwlib::cout << hwlib::_setbase(10);
-                        int playerNR = firstPattern >> 10;
-                        int gunNR = (firstPattern >> 5) & 31; //11111
-                        rGC.sendPlayerInfo(playerNR, gunNR);
+                        sendPattern(firstPattern);
                         state = STATE::IDLE;
                         break;
                     } else{
                         hwlib::cout << "false xor";
                         uint16_t secondPattern = irReceiveQueue.read().r;
                         if (verifyXOR(secondPattern)){
-                            int playerNR = secondPattern >> 10;
-                            int gunNR = (secondPattern >> 5) & 31; //11111
-                            rGC.sendPlayerInfo(playerNR, gunNR);
+                            sendPattern(secondPattern);
                         }
                         
                     }            

@@ -19,8 +19,8 @@ private:
     bool values[16] = {1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0};
  
     struct playerInfo{
-        int playerNR;
-        int dmg;
+        uint8_t playerNR;
+        uint8_t dmg;
     };
     
     int HP_total;
@@ -33,16 +33,15 @@ private:
 	enum STATE state;
     rtos::timer timeout_timer;
     int gameoverTime = 6000000;
-    int killedTime = 6000;
+    int killedTime = 6000000;
     commandListener * cl;
     
     
     void main() override {
-        //const char* c = "hello"; 
         uint8_t spelerID = 0;
-        uint8_t dmg = 30;
+        uint8_t dmg = 3;
         bool readyToStart = 0;
-		encoder.setIrpattern(22, 0);
+		encoder.setIrpattern(22, 3);
         while(1){
             switch(state) {
                 case STATE::STARTUP:
@@ -64,6 +63,11 @@ private:
                                 msg m = {};
                                 m.command = msg::CMD::T_REQ_PLAYERID;
                                 cl -> commandReceived(m);
+                            } else {
+                                encoder.setIrpattern(spelerID, dmg);
+                                encoder.enable();
+                                hwlib::cout << "running!!";
+                                state = STATE::RUNNING;
                             }
                         } else if (message.command == message.CMD::R_HP){
                             hwlib::cout<< "R_HP \n";
@@ -88,6 +92,7 @@ private:
                             HP -= dmg_enemy*10;
                             
                             if (HP <= 0){
+                                hwlib::cout<< "killed!";
                                 msg m = {};
                                 m.command = msg::CMD::T_KILLED_BY;
                                 m.waarde = pi.playerNR;
@@ -104,9 +109,13 @@ private:
                         } else if (done == cmdChannelIn){
                             auto cmd_msg = cmdChannelIn.read();
                             if (cmd_msg.command == cmd_msg.CMD::R_GAME_OVER){
+                                hwlib::cout<< "R_GAME_OVER \n";
                                 timeout_timer.set( gameoverTime );
+                                encoder.disable();
+                                display.showGameOver();
                                 state = STATE::GAMEOVER;
                             } else if (cmd_msg.command == cmd_msg.CMD::R_LAST_MINUTE){
+                                hwlib::cout<< "R_LAST_MINUTE \n";
                                 bz.lastMinuteSound();
                                 display.showOneMinute();
                             } else if (cmd_msg.command == cmd_msg.CMD::R_KILL_CONFIRM){
@@ -114,7 +123,7 @@ private:
                             }
                         }
                     }
-                    
+                    hwlib::wait_us(100);
                     break;
                     
                 case STATE::DEAD:
@@ -124,20 +133,24 @@ private:
                         if (done == cmdChannelIn) {
                             msg cmd_msg = cmdChannelIn.read();
                             if (cmd_msg.command == cmd_msg.CMD::R_GAME_OVER){
+                                hwlib::cout<< "R_GAME_OVER \n";
                                 timeout_timer.set( gameoverTime );
                                 encoder.disable();
                                 display.showGameOver();
                                 bz.gameOverSound();
                                 state = STATE::GAMEOVER;
                             } else if (cmd_msg.command == cmd_msg.CMD::R_LAST_MINUTE){
+                                hwlib::cout<< "R_LAST_MINUTE \n";
                                 bz.lastMinuteSound();
                                 display.showOneMinute();
                             } else if (cmd_msg.command == cmd_msg.CMD::R_KILLED_BY){
                                 display.showKiller(cmd_msg.naam);
                             }
                         } else {
+                            hwlib::cout << "alive!!";
                             encoder.enable();
                             playerInfoQueue.clear();
+                            display.showHPchanged(HP);
                             state = STATE::RUNNING;
                         }
                     }
@@ -159,6 +172,7 @@ public:
     bz (bz),
     encoder ( encoder ),
 	display(display),
+    HP_total (100),
     HP (100),
     playerInfoQueue(this, "playerInfoQueue"),
     cmdChannelIn(this, "cmdChannelIn"),
@@ -167,7 +181,7 @@ public:
     cl (cl)
     {}
     
-    void sendPlayerInfo(int playerNR, int dmg){
+    void sendPlayerInfo(uint8_t playerNR, uint8_t dmg){
         playerInfo pi{playerNR, dmg};
         playerInfoQueue.write(pi);
     }
