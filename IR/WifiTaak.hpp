@@ -29,9 +29,9 @@ private:
 
 public:
 
-	WifiTaak(UARTLib::HardwareUART &ESP, commandListener *cl = nullptr);
+	explicit WifiTaak(UARTLib::HardwareUART &ESP, commandListener *cl = nullptr);
 
-	void commandReceived(const msg &m);
+	void commandReceived(const msg &m) override;
 
 	void setListener(commandListener *cl_def);
 

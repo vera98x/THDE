@@ -37,7 +37,7 @@ void WifiTaak::main(){
 				break;
 			case STATE::LISTENING: {
 				
-				char c;
+				char c = 0;
                 if (wifi_chip.char_available()) {
 					c = wifi_chip.getc();
                     s << c;
@@ -57,7 +57,7 @@ void WifiTaak::main(){
 				break;
 			case STATE::SENDING: {
 				msg m = cmdChannelOut.read();
-				hwlib::string<30> s = "";
+				s.clear();
 				m.serialize(s);
 				wifi_chip.send(s);
                 hwlib::cout<< s << " \n";
