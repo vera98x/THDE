@@ -11,7 +11,7 @@
 #include "hardware_usart.hpp"
 #include "commandListener.hpp"
 
-class WifiTaak : rtos::task<>, public commandListener {
+class WifiControl : rtos::task<>, public commandListener {
 private:
 	rtos::channel<msg, 10> cmdChannelOut;
 	UARTLib::HardwareUART &wifi_chip;
@@ -29,7 +29,7 @@ private:
 
 public:
 
-	explicit WifiTaak(UARTLib::HardwareUART &ESP, commandListener *cl = nullptr);
+	explicit WifiControl(UARTLib::HardwareUART &ESP, commandListener *cl = nullptr);
 
 	void commandReceived(const msg &m) override;
 

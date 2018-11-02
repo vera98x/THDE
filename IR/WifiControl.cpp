@@ -6,18 +6,18 @@
 #include "msg.hpp"
 #include "hardware_usart.hpp"
 #include "commandListener.hpp"
-#include "WifiTaak.hpp"
+#include "WifiControl.hpp"
 
-WifiTaak::WifiTaak(UARTLib::HardwareUART &ESP, commandListener *cl) :
+WifiControl::WifiControl(UARTLib::HardwareUART &ESP, commandListener *cl) :
 	task(9, "WiFi Taak"),
 	cmdChannelOut(this, "cmdChannelIn (WiFiTaak)"),
 	wifi_chip(ESP),
-	waiting_timeout(this, "WifiTaak waiting timeout"),
+	waiting_timeout(this, "WifiControl waiting timeout"),
 	cl(cl),
 	state(STATE::WAITING)
 	{}
 
-void WifiTaak::main(){
+void WifiControl::main(){
 	hwlib::string<30> s;
     for (;;) {
 		switch (state) {
@@ -67,10 +67,10 @@ void WifiTaak::main(){
 	}
 }
 
-void WifiTaak::commandReceived(const msg &m) {
+void WifiControl::commandReceived(const msg &m) {
 	cmdChannelOut.write(m);
 }
 
-void WifiTaak::setListener(commandListener *cl_def){
+void WifiControl::setListener(commandListener *cl_def){
 	cl = cl_def;
 }
