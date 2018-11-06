@@ -4,9 +4,9 @@
 
 #include "hwlib.hpp"
 #include "rtos.hpp"
+#include "buttonListener.hpp"
 
-
-class ir_send : public rtos::task<>{
+class ir_send : public buttonListener,  public rtos::task<> {
 private:
     hwlib::target::d2_36kHz & encoder;
     bool values[16] = {};
@@ -25,7 +25,7 @@ public:
     
     void setIrpattern(uint8_t sp, uint8_t dmg);
     
-    void shootGun();
+    void shootGun() override;
     
     void enable();
     void disable();

@@ -3,7 +3,7 @@
 
 #include "hwlib.hpp"
 #include "rtos.hpp"
-#include "ir_send.hpp"
+#include "buttonListener.hpp"
 
 class button : public rtos::task<>
 {
@@ -12,11 +12,11 @@ private:
 	int previousShot = 0;
 	
 	rtos::flag gunShotFlag;
-    ir_send & transmitter;
+    buttonListener & transmitter;
 	
 	void main ( void );
 public:
-	button(hwlib::target::pin_in & gunTrigger, ir_send & transmitter);
+	button(hwlib::target::pin_in & gunTrigger, buttonListener & transmitter);
 
 };
 

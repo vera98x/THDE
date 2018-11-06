@@ -22,7 +22,7 @@ void button::main ( void )
     }
 }
 
-button::button(hwlib::target::pin_in & gunTrigger, ir_send & transmitter):
+button::button(hwlib::target::pin_in & gunTrigger, buttonListener & transmitter):
     task(3, "buttonTask"),
     gunTrigger(gunTrigger),
     gunShotFlag(this, "gunShotFlag"),
