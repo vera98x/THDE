@@ -4,7 +4,7 @@
 #include "buzzer.hpp"
 #include "runGameController.hpp"
 #include "button.hpp"
-#include "WifiTaak.hpp"
+#include "WifiControl.hpp"
 #include "hardware_usart.hpp"
 
 
@@ -34,7 +34,7 @@ int main( void )
 	UARTLib::HardwareUART wifi_chip = UARTLib::HardwareUART(2400, UARTLib::HardwareUART::UARTController::THREE);
 	wifi_chip.begin();
 
-	WifiTaak WT(wifi_chip, nullptr);
+	WifiControl WT(wifi_chip, nullptr);
 
 	OLEDcontroller window(font, display);
 	ir_send transmitter = ir_send(encoder);

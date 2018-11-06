@@ -20,8 +20,6 @@ private:
 	rtos::pool <const char *> yourNamePool;
 	rtos::pool <const char *> killerInfoPool;
 	
-	char  * killerName [];
-
 	void main( void );
 	
 public:
