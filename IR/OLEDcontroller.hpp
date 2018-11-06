@@ -22,107 +22,28 @@ private:
 	
 	char  * killerName [];
 
-	void main( void ) override
-	{
-		for(;;)
-		{
-			auto done = wait(HPChangedflag + yourNameFlag + oneMinuteFlag + killerFlag + gameOverFlag);
-			if (done == HPChangedflag)
-			{
-				flushHPchanged();
-			}
-			else if(done == yourNameFlag)
-			{
-				flushYourName();
-			}
-			else if(done == oneMinuteFlag)
-			{
-				flushOneMinute();
-			} 
-			else if(done == killerFlag)
-			{
-				flushKiller();
-			}
-			else if(done == gameOverFlag)
-			{
-				flushGameOver();
-			}
-			hwlib::wait_ms(6);
-		}
-	}
+	void main( void );
 	
 public:
-OLEDcontroller(hwlib::font_default_8x8 & font, hwlib::window_ostream & display):
-	task(6, "displaytask"),
-	font(font),
-	display(display),
-	HPChangedflag(this, "HPChangedFlag"),
-	yourNameFlag(this, "yourNameFlag"),
-	killerFlag(this, "killerFlag"),
-	oneMinuteFlag(this, "oneMinuteFlag"),
-	gameOverFlag(this, "gameOverFlag"),
-	HPInfoPool("HPinfoPool"),
-	yourNamePool("yourNamePool"),
-	killerInfoPool("killerInfoPool")
-	{}
+    OLEDcontroller(hwlib::font_default_8x8 & font, hwlib::window_ostream & display);
 	
-	void flushHPchanged()
-	{
-		int newHP = HPInfoPool.read();
-		display << "\f" << "    Je hebt: "<< "\n" << "\n" << "     " <<  newHP << "  HP" << '\n'<< "\n" << "     Over"<< hwlib::flush;
-		
-	}
+	void flushHPchanged();
 	
-	void showHPchanged(const int & HP)
-	{
-		HPInfoPool.write(HP);
-		HPChangedflag.set();
-	}
+	void showHPchanged(const int & HP);
 	
-	void flushYourName()
-	{
-		const char * yourNewName = yourNamePool.read();
-		display << "\f" << "   Welcome: "<< "\n" << "\n    " << yourNewName << '\n' << "\n"<< "  to the match!"<< hwlib::flush;
-	}
+	void flushYourName();
 	
-	void showYourName(char c[15])
-	{
-		yourNamePool.write(c);
-        yourNameFlag.set();
-	}
+	void showYourName(char c[15]);
 	
-	void flushOneMinute()
-	{
-		display << "\f" << "   !OPGELET!"<< "\n" << "\n" << "   1 MINUUT" << '\n' << "\n"<< "  SPEELTIJD OVER"<< hwlib::flush;
-	}
+	void flushOneMinute();
 	
-	void showOneMinute()
-	{
-		oneMinuteFlag.set();
-	}
+	void showOneMinute();
 	
-	void flushKiller()
-	{
-		const char * newName = killerInfoPool.read();
-		display << "\f" << "  YOUR KILLER IS:  "<< "\n"  << "\n" << newName  << '\n' << "\n" << "!BACK TO SPAWN!"<< hwlib::flush;
-	}
+	void flushKiller();
+	void showKiller(const char * name);
+	void flushGameOver();
 	
-	void showKiller(const char * name)
-	{
-		killerInfoPool.write(name);
-		killerFlag.set();
-	}
-	
-	void flushGameOver()
-	{
-		display << "\f" << "    GAME "<< "\n"  << "\n" << "    OVER"  << '\n' << "\n" << "   !YOU SUCK!"<< hwlib::flush;
-	}
-	
-	void showGameOver()
-	{
-		gameOverFlag.set();
-	}
-	
+	void showGameOver();
 	
 };
 #endif //OLEDCONTROLLER_HPP
