@@ -4,7 +4,6 @@
  *
  *	An RTOS Task that handles incoming messages resulting in making a sound
  *	This task periodically checks if there is a flag available and if there is, it wil produce a sound.
-
  * @author    Vera Schoonderwoerd and Gianluca Piccardo
  * @license   Boost
  */
