@@ -49,7 +49,7 @@ private:
 	};
 
 	/**
-	 * @brief out current state
+	 * @brief our current state
 	 */
 	STATE state;
 

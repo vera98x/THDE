@@ -72,8 +72,7 @@ ir_decoder::ir_decoder(runGameController & rGC, int delay):
 	irReceiveQueue(this, "irChannel"),
     state(STATE::IDLE),
     rGC (rGC),
-    delay (delay),
-    timeout_timer (this, "timeout_timer")
+    delay (delay)
 	{}
 	
 void ir_decoder::addPattern(const uint16_t & firstSet)
