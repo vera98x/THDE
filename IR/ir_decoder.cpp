@@ -7,7 +7,7 @@
 bool ir_decoder::verifyXOR(uint16_t d){
     for(unsigned int i=0; i<5; i++)
     {
-        if( (((d << (15-(6+i))) & 1)^( (d << (15-(1+i))) & 1)) != ((d << (15-(11+i))) & 1) )
+        if( (((d >> (15-(6+i))) & 1)^( (d>>(15-(1+i))) & 1)) != ((d>>(15-(11+i))) & 1) )
         {
             //hwlib::cout<< 1+i << " and " << 6+i << " are not XOR" << '\n';
             return false;

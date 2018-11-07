@@ -44,12 +44,6 @@
                             hwlib::cout<< "R_HP \n";
                             HP_total = message.waarde;
                             HP = HP_total;
-                        } else if (spelerID > 0 && readyToStart){
-                            hwlib::cout<< "staaarrtt \n";
-                            encoder.setIrpattern(spelerID, dmg);
-                            encoder.enable();
-                            hwlib::cout << "running!!";
-                            state = STATE::RUNNING;
                         } 
                     }
                     
@@ -133,6 +127,7 @@
                     if (done == timeout_timer){
                         hwlib::cout << "startUP";
                         state = STATE::STARTUP;
+                        encoder.enable();
                     }
                     break;
                     
