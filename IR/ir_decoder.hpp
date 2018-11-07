@@ -55,17 +55,31 @@ private:
     bool verifyXOR(uint16_t d);
     
     /**
-	 * @brief function to send correct messages to runGameC
-     * @details This function checks if the player- and datapattern meets the XOR pattern. If not, it wil retrieve the second (backup) pattern and will compare this one
-     * if it is still not correct, the pattern is deleted and the return will be false.
+	 * @brief function to send correct messages to runGameController
+     * @details This function converts the pattern to a playernumber and a damagenumber. This will be send to runGameController.
      * @param uint16_t d
 	 */
     void sendPattern(uint16_t pattern);
     
+    /**
+	 * @brief Body of the function. Checks if the player- and datapattern are correct. If it is, it will be send by sendpattern(pattern)
+     * @details This function checks if the player- and datapattern meets the XOR pattern. If not, it wil retrieve the second (backup) pattern and will compare this one
+     * if it is still not correct, the pattern is deleted and the return will be false.
+	 */
 	void main( void );
 	
 public:
-	ir_decoder(runGameController & rGC, int delay);
+	/**
+	 * @brief Constructor of the ir_decoder.
+	 * @param runGameController rGC
+	 * @param int delay
+	 */
+    ir_decoder(runGameController & rGC, int delay);
+    
+    /**
+	 * @brief adds a pattern to the channel. The taks can process this at a certain time
+	 * @param uint16_t firstSet
+	 */
 	void addPattern(const uint16_t & firstSet);
 
 };

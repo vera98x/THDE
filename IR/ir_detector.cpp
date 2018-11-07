@@ -1,26 +1,10 @@
-#ifndef _IR_DETECTOR_HPP
-#define _IR_DETECTOR_HPP
-
 
 #include "hwlib.hpp"
 #include "rtos.hpp"
 #include "ir_decoder.hpp"
+#include "ir_detector.hpp"
 
-class ir_detector: public rtos::task<>
-{
-private:
-	hwlib::target::pin_in & receivePin;
-	ir_decoder & decoder;
-	uint16_t firstSet = 0;
-	//uint16_t secondSet = 0;
-	enum class STATE {WAITING, MESSAGING};
-	enum STATE state;
-	int counter = 0;
-	int timerValue = 100;
-    
-	
-
-	void main( void ) override
+	void ir_detector::main( void ) 
 	{
         int n = 0;
 		for(;;)
@@ -70,16 +54,10 @@ private:
 	}
 
 
-public:
-ir_detector(ir_decoder & decoder, hwlib::target::pin_in & receivePin):
+ir_detector::ir_detector(ir_decoder & decoder, hwlib::target::pin_in & receivePin):
 	task(1, "detector_task"),	
 	receivePin(receivePin),
 	decoder ( decoder ),
 	state(STATE::WAITING)
 	{}
 	
-
-
-};
-
-#endif
