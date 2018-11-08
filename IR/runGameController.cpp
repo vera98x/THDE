@@ -37,6 +37,7 @@
                             } else {
                                 encoder.setIrpattern(spelerID, dmg);
                                 encoder.enable();
+								display.showHPchanged(HP);
                                 hwlib::cout << "running!!";
                                 state = STATE::RUNNING;
                             }

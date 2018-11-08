@@ -124,6 +124,5 @@ public:
      * @details This funtion sets a flag when the current game has ended
 	 */
 	void showGameOver();
-	
 };
 #endif //OLEDCONTROLLER_HPP
