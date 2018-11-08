@@ -91,7 +91,7 @@ private:
     /**
 	 * @brief duration of our killedTime
 	 */
-    int killedTime = 6000000;
+    int killedTime = 15000000;
     
     /**
 	 * @brief commandListener, to give a signal about the game to the server

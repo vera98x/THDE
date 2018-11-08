@@ -66,7 +66,7 @@ public:
 		hwlib::cout << "semicolon: " << semicolon<< '\n';
 
 		command = static_cast<CMD>(s[colon+1] - '0');
-		if(command == CMD::R_PLAYER_NAME || command == CMD::R_KILLED_BY){
+		if(command == CMD::R_PLAYER_NAME || command == CMD::R_KILLED_BY || command == CMD::R_KILL_CONFIRM){
 			for(uint8_t i = comma + 1, j = 0; i < semicolon; i++, j++){
 				naam[j] = s[i];
 			}
@@ -83,10 +83,10 @@ public:
 		s.clear();
 		s << "CMD:";
 		s << (char)((uint8_t)command + '0') << ',';
-		if(command == CMD::R_PLAYER_NAME || command == CMD::R_KILLED_BY){
+		if(command == CMD::R_PLAYER_NAME || command == CMD::R_KILLED_BY || command == CMD::R_KILLED_BY){
 			s << naam;
 		}else{
-            hwlib::cout << waarde << '\n';
+            //hwlib::cout << waarde << '\n';
 			s << (char)(waarde + '0');
 		}
 		s << ';';

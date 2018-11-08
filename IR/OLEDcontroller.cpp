@@ -87,6 +87,7 @@
 	void OLEDcontroller::flushKiller()
 	{
 		const char * newName = killerInfoPool.read();
+		hwlib::cout << " you killed " << newName << " \n";
 		display << "\f" << "  YOUR KILLER IS:  "<< "\n"  << "\n" << newName  << '\n' << "\n" << "!BACK TO SPAWN!"<< hwlib::flush;
 	}
 	

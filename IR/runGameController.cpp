@@ -111,6 +111,7 @@
                                 bz.lastMinuteSound();
                                 display.showOneMinute();
                             } else if (cmd_msg.command == cmd_msg.CMD::R_KILLED_BY){
+                                hwlib::cout<<" you got killed \n";
                                 display.showKiller(cmd_msg.naam);
                             }
                         } else {

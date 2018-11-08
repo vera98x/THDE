@@ -45,12 +45,11 @@ void WifiControl::main(){
                     hwlib::wait_us(100);
 				}
                 if (c == ';'){
-                    hwlib::cout<<"test \n";
-                    hwlib::cout<< s << " \n";
+                    hwlib::cout << "\n" << s << "\n";
                     msg received(s);
                     cl->commandReceived(received);
                     state = STATE::WAITING;
-                    s = "";
+                    s.clear();
                 }
 			}
                 hwlib::wait_us(100);
@@ -62,6 +61,7 @@ void WifiControl::main(){
 				wifi_chip.send(s);
                 hwlib::cout<< s << " \n";
 				state = STATE::WAITING;
+				s.clear();
 			}
 		}
 	}
