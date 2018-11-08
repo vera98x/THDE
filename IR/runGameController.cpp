@@ -57,21 +57,22 @@
                             auto pi = playerInfoQueue.read();
                             auto dmg_enemy = pi.dmg;
                             HP -= dmg_enemy*10;
-                            
-                            if (HP <= 0){
-                                hwlib::cout<< "killed!";
-                                msg m = {};
-                                m.command = msg::CMD::T_KILLED_BY;
-                                m.waarde = pi.playerNR;
-                                cl -> commandReceived(m);
-                                encoder.disable();
-                                HP = HP_total;                               
-                                timeout_timer.set( killedTime );
-                                state = STATE::DEAD;
-                            } else if (dmg > 0) {
-                                bz.hitSound();
-                                display.showHPchanged(HP);
-                                
+                            if(pi.playerNR != spelerID){
+                                if (HP <= 0){
+                                    hwlib::cout<< "killed!";
+                                    msg m = {};
+                                    m.command = msg::CMD::T_KILLED_BY;
+                                    m.waarde = pi.playerNR;
+                                    cl -> commandReceived(m);
+                                    encoder.disable();
+                                    HP = HP_total;                               
+                                    timeout_timer.set( killedTime );
+                                    state = STATE::DEAD;
+                                } else if (dmg > 0) {
+                                    bz.hitSound();
+                                    display.showHPchanged(HP);
+                                    
+                                }
                             }
                         } else if (done == cmdChannelIn){
                             auto cmd_msg = cmdChannelIn.read();
